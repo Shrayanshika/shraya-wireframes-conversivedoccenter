@@ -36,7 +36,7 @@ export function SOPDiagram({
         )}
       </div>
 
-      <div className="relative overflow-hidden rounded-2xl border border-navy/15 bg-gradient-to-br from-[oklch(0.98_0.01_240)] to-[oklch(0.95_0.03_220)] p-6 md:p-10 shadow-[0_20px_60px_-30px_oklch(0.45_0.15_240/0.35)]">
+      <div className="relative overflow-hidden rounded-2xl border border-navy/15 bg-gradient-to-br from-[oklch(0.98_0.01_240)] to-[oklch(0.95_0.03_220)] p-4 md:p-6 shadow-[0_20px_60px_-30px_oklch(0.45_0.15_240/0.35)]">
         {/* subtle dot pattern */}
         <div
           aria-hidden
