@@ -26,7 +26,7 @@ function ComingSoon() {
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-sm text-ink-soft">
           Friday timesheet alerts and other RRULE-driven schedules are on the
-          Wavelength roadmap. The next release will document the Message
+          Recruitment Outreach Program roadmap. The next release will document the Message
           Automation Library for admins and the{" "}
           <code className="rounded bg-muted px-1 font-mono text-[12px]">Schedulable</code>{" "}
           context for developers.
