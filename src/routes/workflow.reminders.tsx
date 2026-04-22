@@ -26,9 +26,10 @@ function ComingSoon() {
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-sm text-ink-soft">
           The 2-day and 2-hour interview reminder triggers are part of the
-          Wavelength roadmap. They'll ship alongside Recurring Alerts in the
-          next prototype release. The Admin guide will showcase the Message
-          Automation Library; the Developer guide will document{" "}
+          Recruitment Outreach Program roadmap. They'll ship alongside
+          Recurring Alerts in the next prototype release. The Admin guide will
+          showcase the Message Automation Library; the Developer guide will
+          document{" "}
           <code className="rounded bg-muted px-1 font-mono text-[12px]">@future(callout=true)</code>{" "}
           patterns.
         </p>

@@ -22,7 +22,7 @@ const groups: Group[] = [
     ],
   },
   {
-    title: "Wavelength Workflow",
+    title: "Recruitment Outreach Program",
     items: [
       { to: "/workflow/sender-ids",   label: "1 · Assign Sender IDs",   icon: Hash, audience: "both" },
       { to: "/workflow/consent",      label: "2 · Capture Consent",     icon: ShieldCheck, audience: "both" },
