@@ -36,7 +36,7 @@ export function SOPDiagram({
         )}
       </div>
 
-      <div className="relative overflow-hidden rounded-2xl border border-navy/15 bg-gradient-to-br from-[oklch(0.98_0.01_240)] to-[oklch(0.95_0.03_220)] p-6 md:p-10 shadow-[0_20px_60px_-30px_oklch(0.45_0.15_240/0.35)]">
+      <div className="relative overflow-hidden rounded-2xl border border-navy/15 bg-gradient-to-br from-[oklch(0.98_0.01_240)] to-[oklch(0.95_0.03_220)] p-4 md:p-6 shadow-[0_20px_60px_-30px_oklch(0.45_0.15_240/0.35)]">
         {/* subtle dot pattern */}
         <div
           aria-hidden
@@ -63,22 +63,22 @@ export function SOPDiagram({
                   }`}
                 >
                   <div
-                    className={`relative w-[78%] sm:w-[62%] md:w-[54%] rounded-full border px-6 py-4 transition-all ${
+                    className={`relative max-w-[260px] sm:max-w-[280px] rounded-full border px-4 py-2 transition-all ${
                       isHighlight
-                        ? "border-transparent bg-gradient-to-r from-[oklch(0.45_0.18_255)] to-[oklch(0.55_0.16_240)] text-white shadow-[0_14px_40px_-12px_oklch(0.45_0.18_255/0.55)] node-pulse"
-                        : "border-navy/15 bg-white text-foreground shadow-[0_8px_24px_-12px_oklch(0.45_0.15_240/0.25)]"
+                        ? "border-transparent bg-gradient-to-r from-[oklch(0.45_0.18_255)] to-[oklch(0.55_0.16_240)] text-white shadow-[0_10px_28px_-12px_oklch(0.45_0.18_255/0.5)] node-pulse"
+                        : "border-navy/15 bg-white text-foreground shadow-[0_6px_18px_-12px_oklch(0.45_0.15_240/0.25)]"
                     }`}
                     style={{ animationDelay: `${i * 200}ms` }}
                   >
                     <div
-                      className={`text-[10px] font-semibold uppercase tracking-[0.2em] ${
+                      className={`text-[9px] font-semibold uppercase tracking-[0.18em] leading-none ${
                         isHighlight ? "text-white/70" : "text-teal"
                       }`}
                     >
                       Step {i + 1}
                     </div>
                     <div
-                      className={`font-display text-[15px] md:text-base font-semibold leading-tight ${
+                      className={`font-display text-[13px] font-semibold leading-tight mt-0.5 ${
                         isHighlight ? "text-white" : "text-foreground"
                       }`}
                     >
@@ -86,7 +86,7 @@ export function SOPDiagram({
                     </div>
                     {n.sub && (
                       <div
-                        className={`mt-0.5 font-mono text-[10px] ${
+                        className={`mt-0.5 font-mono text-[9px] leading-tight ${
                           isHighlight ? "text-white/75" : "text-ink-soft"
                         }`}
                       >
@@ -96,7 +96,7 @@ export function SOPDiagram({
                     {isHighlight && (
                       <span
                         aria-hidden
-                        className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-teal-bright ping-dot"
+                        className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-teal-bright ping-dot"
                       />
                     )}
                   </div>
@@ -159,7 +159,7 @@ function Connector({
         } 28 L ${endX - (endX > startX ? 6 : -6)} 28 Q ${endX} 28 ${endX} 34 L ${endX} 56`;
 
   return (
-    <div className="relative h-14 w-full" aria-hidden>
+    <div className="relative h-9 w-full" aria-hidden>
       <svg
         viewBox="0 0 100 56"
         preserveAspectRatio="none"
