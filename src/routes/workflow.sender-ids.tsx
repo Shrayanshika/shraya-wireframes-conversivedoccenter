@@ -64,7 +64,7 @@ function SenderIds() {
           Open the Converse App and follow the two-tab flow: <strong>Add Sender ID</strong>{" "}
           to procure numbers, then <strong>Assign Sender ID</strong> to map them
           to recruiter Users.
-        </p>
+        </P>
 
         <Steps>
           <Step title="Open Sender ID Management">
@@ -113,7 +113,7 @@ function SenderIds() {
           validated during object insertion or the <code>pushSMSCallout()</code>{" "}
           execution. Bulk-provision recruiters from your HRIS using the snippets
           below.
-        </p>
+        </P>
         <CodeBlock
           tabs={[
             {

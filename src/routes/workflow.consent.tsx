@@ -66,7 +66,7 @@ function Consent() {
           From Multichannel Compliance, click into <strong>Step 2 · Consent
           Method & Content</strong>. Here you choose the consent mode per
           message source — Automated, Bulk and Interactive Conversations.
-        </p>
+        </P>
 
         <Steps>
           <Step title="Open Multichannel Compliance">
@@ -118,7 +118,7 @@ function Consent() {
           Sync external opt-in events (web forms, IVR, partner APIs) into
           Salesforce by listening to Conversive consent webhooks and updating
           the Contact's <code>Consent__c</code> field.
-        </p>
+        </P>
         <CodeBlock
           tabs={[
             {

@@ -92,7 +92,7 @@ function BulkSms() {
           objects you'll touch during a campaign — Contacts, Leads, Channel
           Events, Communication Subscription Consents and the SMS-Magic
           objects all live here.
-        </p>
+        </P>
 
         <GuidedSnapshot
           step="Snapshot 2"
