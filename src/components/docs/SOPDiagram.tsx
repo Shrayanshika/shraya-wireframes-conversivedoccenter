@@ -159,7 +159,7 @@ function Connector({
         } 28 L ${endX - (endX > startX ? 6 : -6)} 28 Q ${endX} 28 ${endX} 34 L ${endX} 56`;
 
   return (
-    <div className="relative h-14 w-full" aria-hidden>
+    <div className="relative h-9 w-full" aria-hidden>
       <svg
         viewBox="0 0 100 56"
         preserveAspectRatio="none"
