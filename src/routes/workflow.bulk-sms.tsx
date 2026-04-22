@@ -2,15 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageShell, H2, P, Steps, Step } from "@/components/docs/PageShell";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import { Callout } from "@/components/docs/Callout";
-import { AudienceSection } from "@/components/docs/PersonaBadge";
-import { Screenshot, VideoTutorials } from "@/components/docs/AdminMedia";
-import converseApps from "@/assets/sf-converse-apps.png";
+import { PersonaOnly } from "@/lib/persona";
+import { GuidedSnapshot, VideoSection, Prerequisites } from "@/components/docs/GuidedSnapshot";
+import { SOPDiagram } from "@/components/docs/SOPDiagram";
+import { ListFilter, Filter, LayoutTemplate, FileText, Send } from "lucide-react";
+import bulk1 from "@/assets/bulk1.png";
+import bulk2 from "@/assets/bulk2.png";
 
 export const Route = createFileRoute("/workflow/bulk-sms")({
   head: () => ({
     meta: [
       { title: "Segment & Bulk SMS — Conversive" },
-      { name: "description", content: "Use Campaign Manager to filter candidates by Specialty and Seniority, then broadcast compliant SMS at scale." },
+      { name: "description", content: "Filter Salesforce list views by Specialty, pick a template, and broadcast compliant SMS at scale via the SMS-Magic Bulk component." },
       { property: "og:title", content: "Step 3 · Segment & Bulk SMS" },
       { property: "og:description", content: "The broadcast engine for Wavelength locum alerts." },
     ],
@@ -23,7 +26,7 @@ function BulkSms() {
     <PageShell
       eyebrow="Step 3 · Broadcast"
       title="Segment & Bulk SMS"
-      description="Wavelength's value is speed: get the right locum role to the right specialist within minutes. Campaign Manager filters your candidate book by Specialty + Seniority + Region, runs a consent check, then dispatches via the assigned Sender IDs."
+      description="Wavelength's value is speed: get the right locum role to the right specialist within minutes. Use a Salesforce list view (e.g. Emergency Medicine candidates), open the SMS-Magic Bulk component, pick a template and dispatch."
       breadcrumbs={[
         { label: "Docs", to: "/" },
         { label: "Wavelength Workflow" },
@@ -32,134 +35,127 @@ function BulkSms() {
       prev={{ to: "/workflow/consent", label: "Capture Consent" }}
       next={{ to: "/workflow/converse-desk", label: "1:1 Conversation" }}
     >
-      <H2 id="filters">Building a segment</H2>
-      <P>
-        Wavelength's most-used segment is <em>Emergency Medicine, Senior, NSW</em>.
-        Define it once as a <strong>Saved Segment</strong> and reuse it across
-        campaigns.
-      </P>
+      <SOPDiagram
+        title="Bulk dispatch flow"
+        caption="A list view is filtered by specialty, opened in the Bulk SMS component, mapped to a template, and dispatched as a batch via the SMS-Magic engine."
+        nodes={[
+          { label: "Salesforce List View", sub: "Candidates", icon: ListFilter },
+          { label: "Specialty Filter", sub: "Emergency Medicine", icon: Filter },
+          { label: "SMS-Magic Component", sub: "Bulk SMS", icon: LayoutTemplate, tone: "primary" },
+          { label: "Template Selection", sub: "wavelength_locum_alert", icon: FileText },
+          { label: "Batch Send", sub: "Throttle 30/sec/sender", icon: Send, tone: "success" },
+        ]}
+      />
 
-      <div className="my-5 overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-        <div className="border-b border-border bg-surface-2 px-4 py-2 text-xs font-medium text-ink-soft">
-          Converse App · Campaign Manager · New Segment
-        </div>
-        <div className="grid gap-3 p-5 sm:grid-cols-3">
-          {[
-            { label: "Specialty", value: "Emergency Medicine" },
-            { label: "Seniority", value: "Senior (5+ yrs)" },
-            { label: "Region", value: "NSW" },
-            { label: "Consent", value: "Opted-In · SMS" },
-            { label: "Last contacted", value: "> 7 days ago" },
-            { label: "Estimated reach", value: "1,284 candidates" },
-          ].map((f) => (
-            <div key={f.label} className="rounded-md border border-border bg-surface-2 p-3">
-              <div className="text-[11px] uppercase tracking-wider text-ink-soft">{f.label}</div>
-              <div className="mt-1 text-sm font-semibold text-foreground">{f.value}</div>
-            </div>
-          ))}
-        </div>
-        <div className="flex items-center justify-between border-t border-border bg-teal-soft px-4 py-3">
-          <span className="text-sm text-navy-deep">
-            <strong>1,284</strong> recipients will receive this campaign.
-          </span>
-          <button className="rounded-md bg-navy-deep px-3 py-1.5 text-xs font-semibold text-white">
-            Save segment
-          </button>
-        </div>
-      </div>
+      <Prerequisites
+        items={[
+          { label: "Watch · Bulk Campaigns Tutorial (6m)", href: "#video-bulk-tutorial", note: "dummy walkthrough video" },
+          { label: "Required Permissions · SMS_User + Bulk_SMS_Allowed", href: "#perm-bulk-sms" },
+          { label: "Video Library · All SMS-Magic tutorials", href: "https://www.sms-magic.co/docs/videos/" },
+          { label: "Consent configured for source: Bulk Conversations (see Step 2)" },
+        ]}
+      />
 
-      <AudienceSection audience="admin" title="Launch a Bulk Campaign">
+      <PersonaOnly audience="admin">
+        <H2 id="launch">Launch a Bulk Campaign from a list view</H2>
+
         <Steps>
-          <Step title="Open Campaign Manager">
-            Converse App → <strong>Campaigns</strong> → <em>New SMS Campaign</em>.
+          <Step title="Open the candidate list view">
+            From the Salesforce home or All Tabs page, navigate to your{" "}
+            <strong>Contacts</strong> or custom <em>Candidates</em> tab. Switch
+            to a list view filtered to the right specialty.
           </Step>
-          <Step title="Pick the segment">
-            Select <em>EM Senior NSW</em>. Conversive auto-excludes candidates
-            who opted out or were messaged in the last 7 days.
+          <Step title="Select recipients">
+            Tick the candidates you want to message. The SMS-Magic Bulk button
+            appears once one or more rows are selected.
           </Step>
-          <Step title="Choose template">
-            Pick <code>wavelength_locum_alert</code>. Merge fields render from
-            each candidate's record.
+          <Step title="Open the Bulk SMS component">
+            Click <strong>Send Bulk SMS</strong>. Pick the Sender ID (or let
+            owner-routing fan out across the 42 recruiter numbers).
           </Step>
-          <Step title="Throttle & dispatch">
-            Set send rate to <strong>30 msgs/sec/sender</strong>. Sends fan out
-            across the 42 recruiter Sender IDs so each candidate hears from
-            their own recruiter.
+          <Step title="Choose template & dispatch">
+            Select <code>wavelength_locum_alert</code>, preview the merge, and
+            confirm. The engine respects consent, throttles per sender, and
+            writes the result back to each candidate's activity timeline.
           </Step>
         </Steps>
 
-        <div className="mt-4 overflow-hidden rounded-md bg-navy-deep p-4 text-sm text-white">
-          <div className="text-xs uppercase tracking-wider text-teal-bright">Template preview</div>
-          <div className="mt-2 leading-relaxed">
-            Hi <span className="text-teal-bright">{"{{FirstName}}"}</span>,
-            locum job available for a{" "}
-            <span className="text-teal-bright">{"{{Specialty}}"}</span> in NSW —
-            3 days, $2,400/day, starts Mon. Reply <strong>YES</strong> to
-            shortlist or <strong>STOP</strong> to opt out. — Wavelength
-          </div>
-        </div>
-
-        <Screenshot
-          src={converseApps}
-          caption="Converse Apps → Setup → Bulk Campaign — the same Setup menu where Templates and Automation live also launches Bulk Campaigns."
+        <GuidedSnapshot
+          step="Snapshot 1"
+          src={bulk1}
+          caption="SMS-Magic Converse home — Recent Items list shows recent candidate records and the Converse Templates / Consents / SMS History tabs used during a bulk dispatch."
           source={{ label: "sms-magic.co · Run SMS Campaign", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/configure-run-sms-campaign-button-in-classic/" }}
         />
 
-        <VideoTutorials
+        <P>
+          The <strong>All Tabs</strong> page in Salesforce is your fast-path to
+          objects you'll touch during a campaign — Contacts, Leads, Channel
+          Events, Communication Subscription Consents and the SMS-Magic
+          objects all live here.
+        </P>
+
+        <GuidedSnapshot
+          step="Snapshot 2"
+          src={bulk2}
+          caption="Salesforce All Tabs view — the Communication Subscription Consents and Channel Events tabs are key references for campaign managers tracking opt-ins and delivery events."
+          source={{ label: "sms-magic.co · Salesforce KB", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/" }}
+        />
+
+        <VideoSection
           videos={[
-            { title: "Configure & run an SMS Campaign", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/configure-run-sms-campaign-button-in-classic/", duration: "6 min" },
-            { title: "Building your first Campaign", href: "https://www.sms-magic.co/docs/videos/", duration: "5 min" },
-            { title: "Multichannel Compliance Configuration", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/multichannel-compliance-configuration/" },
-            { title: "All Conversive video tutorials", href: "https://www.sms-magic.co/docs/videos/" },
+            { title: "Bulk SMS Component walkthrough", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/configure-run-sms-campaign-button-in-classic/", duration: "6 min" },
+            { title: "All SMS-Magic Video Library", href: "https://www.sms-magic.co/docs/videos/" },
+            { title: "Multichannel Compliance for batches", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/multichannel-compliance-configuration/", duration: "4 min" },
           ]}
         />
-      </AudienceSection>
+      </PersonaOnly>
 
-      <AudienceSection audience="dev" title="Send a bulk campaign via API">
+      <PersonaOnly audience="dev">
+        <H2 id="dev">Triggering mass alerts via <code>pushSMSCallout()</code></H2>
         <CodeBlock
           tabs={[
             {
-              label: "POST /v1/campaigns",
-              language: "bash",
-              code: `curl -X POST https://api.beconversive.com/v1/campaigns \\
-  -H "Authorization: Bearer $CONVERSIVE_TOKEN" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "name": "EM Senior NSW · 22 Apr",
-    "template": "wavelength_locum_alert",
-    "segment": {
-      "specialty": "Emergency Medicine",
-      "seniority": "senior",
-      "region": "NSW",
-      "consent_status": "opted_in",
-      "last_contacted_before": "2026-04-15T00:00:00Z"
-    },
-    "fan_out": "by_assigned_recruiter",
-    "throttle_per_sender": 30,
-    "consent_check": true
-  }'`,
+              label: "Apex / Code",
+              language: "apex",
+              code: `List<smagicinteract__smsMagic__c> smsList = new List<smagicinteract__smsMagic__c>();
+for (Contact c : segmentedContacts) {
+    smagicinteract__smsMagic__c sms = new smagicinteract__smsMagic__c();
+    sms.smagicinteract__SenderId__c    = 'BulkSender';
+    sms.smagicinteract__PhoneNumber__c = c.MobilePhone;
+    sms.smagicinteract__SMSText__c     = 'New Locum Role Available!';
+    smsList.add(sms);
+}
+String response = smagicinteract.ApexAPI.pushSMSCallout(smsList);`,
             },
             {
-              label: "Apex (Flow)",
-              language: "apex",
-              code: `smsmagic.SMS_Service.Campaign c = new smsmagic.SMS_Service.Campaign();
-c.name        = 'EM Senior NSW · 22 Apr';
-c.templateApi = 'wavelength_locum_alert';
-c.segmentSOQL = 'SELECT Id FROM Candidate__c WHERE Specialty__c = \\'Emergency Medicine\\' '
-              + 'AND Seniority__c = \\'Senior\\' AND Region__c = \\'NSW\\' '
-              + 'AND SMS_Consent__c = true';
-c.fanOutMode  = 'BY_ASSIGNED_RECRUITER';
-c.throttle    = 30;
-
-smsmagic.SMS_Service.dispatchCampaign(c);`,
+              label: "Request JSON",
+              language: "json",
+              code: `{
+  "batch_id": "batch_99",
+  "recipients": 300,
+  "template": "Job_Alert_Template"
+}`,
+            },
+            {
+              label: "Response JSON",
+              language: "json",
+              code: `{
+  "status": "submitted",
+  "batch_size": 300,
+  "responseText": "success"
+}`,
             },
           ]}
         />
-      </AudienceSection>
+        <P className="text-xs text-ink-soft">
+          Reference: <a className="text-teal underline" target="_blank" rel="noreferrer" href="https://www.sms-magic.co/docs/developers/knowledge-base-category/sms-magic-for-developers/">SMS-Magic Developer Knowledge Base</a>.
+        </P>
+      </PersonaOnly>
 
       <Callout variant="success" title="Wavelength benchmark">
-        A 1,200-candidate EM Senior broadcast typically lands the first 3 acceptances
-        within <strong>4 minutes</strong>, and fills the role in under 20.
+        A 1,200-candidate Emergency Medicine broadcast typically lands the first
+        3 acceptances within <strong>4 minutes</strong>, and fills the role in
+        under 20.
       </Callout>
     </PageShell>
   );

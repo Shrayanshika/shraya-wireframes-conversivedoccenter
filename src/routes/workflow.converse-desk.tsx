@@ -1,18 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PageShell, H2, P } from "@/components/docs/PageShell";
+import { PageShell, H2, P, Steps, Step } from "@/components/docs/PageShell";
 import { Callout } from "@/components/docs/Callout";
-import { AudienceSection } from "@/components/docs/PersonaBadge";
+import { PersonaOnly } from "@/lib/persona";
 import { CodeBlock } from "@/components/docs/CodeBlock";
-import { Screenshot, VideoTutorials } from "@/components/docs/AdminMedia";
-import converseApps from "@/assets/sf-converse-apps.png";
+import { GuidedSnapshot, VideoSection, Prerequisites } from "@/components/docs/GuidedSnapshot";
+import { SOPDiagram } from "@/components/docs/SOPDiagram";
+import { MessageSquare, Radio, Inbox, Reply } from "lucide-react";
+import desk1 from "@/assets/desk1.png";
+import desk2 from "@/assets/desk2.png";
 
 export const Route = createFileRoute("/workflow/converse-desk")({
   head: () => ({
     meta: [
       { title: "1:1 Conversation — Conversive" },
-      { name: "description", content: "Handle inbound candidate replies in Converse Desk — Conversive's unified SMS inbox inside Salesforce." },
+      { name: "description", content: "Configure the Converse Desk Layout, theme and recruiter routing for real-time 1:1 candidate conversations inside Salesforce." },
       { property: "og:title", content: "Step 4 · 1:1 Conversation" },
-      { property: "og:description", content: "Converse Desk inbox for candidate Q&A." },
+      { property: "og:description", content: "Converse Desk inbox setup and recruiter assignment." },
     ],
   }),
   component: ConverseDesk,
@@ -23,148 +26,135 @@ function ConverseDesk() {
     <PageShell
       eyebrow="Step 4 · Engagement"
       title="1:1 Conversation in Converse Desk"
-      description="When a candidate replies, the message lands in Converse Desk — a Salesforce-native inbox routed to the assigned recruiter. Threads keep full context: candidate record, prior messages, consent status, and AI-suggested replies."
+      description="When a candidate replies, the inbound message lands in Converse Desk — Conversive's Salesforce-native inbox routed to the assigned recruiter. Define a custom layout with the right filters, set a theme, and let recruiters work the queue."
       breadcrumbs={[
         { label: "Docs", to: "/" },
         { label: "Wavelength Workflow" },
         { label: "Converse Desk" },
       ]}
       prev={{ to: "/workflow/bulk-sms", label: "Segment & Bulk SMS" }}
-      next={{ to: "/workflow/reminders", label: "Auto-Reminders" }}
     >
-      <H2 id="ui">The Converse Desk inbox</H2>
-      <P>
-        Built as a Lightning Component, Converse Desk drops into any Salesforce
-        Console app. Recruiters live here.
-      </P>
+      <SOPDiagram
+        title="1:1 inbound flow"
+        caption="An inbound SMS triggers a Salesforce Push Topic, which fires a Converse Desk notification routed to the recruiter who owns the Sender ID."
+        nodes={[
+          { label: "Incoming SMS", sub: "Candidate reply", icon: MessageSquare },
+          { label: "Salesforce Push Topic", sub: "Streaming API", icon: Radio },
+          { label: "Converse Desk Notification", sub: "Lightning component", icon: Inbox, tone: "primary" },
+          { label: "Recruiter Reply", sub: "Threaded back to sender", icon: Reply, tone: "success" },
+        ]}
+      />
 
-      <div className="my-6 overflow-hidden rounded-xl border border-border bg-card shadow-lg">
-        <div className="grid grid-cols-12">
-          {/* Inbox list */}
-          <div className="col-span-4 border-r border-border bg-surface-2">
-            <div className="border-b border-border px-3 py-2 text-xs font-semibold uppercase tracking-wider text-ink-soft">
-              Inbox · 3 new
-            </div>
-            {[
-              { name: "Priya N.", msg: "Yes, I'm available Mon!", time: "2m", unread: true, active: true },
-              { name: "Daniel R.", msg: "What's the day rate?", time: "8m", unread: true },
-              { name: "Mei T.", msg: "Can you push to Wed?", time: "14m", unread: true },
-              { name: "Jordan K.", msg: "Thanks, all set.", time: "1h" },
-              { name: "Sara A.", msg: "STOP", time: "2h" },
-            ].map((c) => (
-              <div
-                key={c.name}
-                className={`flex items-start gap-2 border-b border-border px-3 py-2.5 ${
-                  c.active ? "bg-teal-soft" : "hover:bg-card"
-                }`}
-              >
-                <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-navy-deep text-[10px] font-bold text-teal-bright">
-                  {c.name.split(" ").map((s) => s[0]).join("")}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between">
-                    <span className={`truncate text-sm ${c.unread ? "font-semibold text-foreground" : "text-ink-soft"}`}>
-                      {c.name}
-                    </span>
-                    <span className="text-[10px] text-ink-soft">{c.time}</span>
-                  </div>
-                  <div className="truncate text-xs text-ink-soft">{c.msg}</div>
-                </div>
-                {c.unread && <div className="mt-1 h-2 w-2 rounded-full bg-teal" />}
-              </div>
-            ))}
-          </div>
+      <Prerequisites
+        items={[
+          { label: "Watch · Converse Desk Admin Tutorial (7m)", href: "#video-converse-desk", note: "dummy walkthrough video" },
+          { label: "Sender IDs assigned to recruiter Users (see Step 1)", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/search-and-assign-sender-id/" },
+          { label: "Permission Set · SMS_Inbox_User on every recruiter profile" },
+        ]}
+      />
 
-          {/* Thread */}
-          <div className="col-span-8 flex flex-col bg-card">
-            <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
-              <div>
-                <div className="text-sm font-semibold">Priya Naidoo</div>
-                <div className="text-xs text-ink-soft">
-                  Emergency Medicine · Senior · NSW · <span className="text-[oklch(0.5_0.15_150)]">● Opted-In</span>
-                </div>
-              </div>
-              <div className="text-xs text-ink-soft">
-                Sender: <span className="font-mono">+61 480 123 007</span>
-              </div>
-            </div>
-            <div className="flex-1 space-y-3 px-4 py-4">
-              <div className="flex justify-end">
-                <div className="max-w-[80%] rounded-2xl rounded-br-sm bg-navy-deep px-3 py-2 text-sm text-white">
-                  Hi Priya, locum job available for an Emergency Medicine specialist
-                  in NSW — 3 days, $2,400/day, starts Mon. Reply YES to shortlist.
-                </div>
-              </div>
-              <div className="flex">
-                <div className="max-w-[80%] rounded-2xl rounded-bl-sm bg-muted px-3 py-2 text-sm text-foreground">
-                  Yes, I'm available Mon! Is accommodation included?
-                </div>
-              </div>
-              <div className="flex">
-                <div className="max-w-[80%] rounded-2xl rounded-bl-sm border border-dashed border-teal/40 bg-teal-soft px-3 py-2 text-xs text-navy-deep">
-                  <span className="font-semibold">Conversive AI suggests:</span> Yes — Travelodge Sydney, paid by Wavelength. I'll send confirmation shortly.
-                </div>
-              </div>
-            </div>
-            <div className="border-t border-border p-3">
-              <div className="flex items-center gap-2 rounded-lg border border-border bg-surface-2 px-3 py-2">
-                <input className="flex-1 bg-transparent text-sm outline-none" placeholder="Reply to Priya…" />
-                <button className="rounded-md bg-teal px-3 py-1.5 text-xs font-semibold text-white">Send</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <AudienceSection audience="admin" title="Configure Converse Desk for recruiters">
+      <PersonaOnly audience="admin">
+        <H2 id="layout">Configure Converse Desk Layout</H2>
         <P>
-          Add the <strong>Converse Desk</strong> Lightning Component to the
-          Recruiter Console app. Set <em>routing</em> to <strong>Owner-of-Sender-ID</strong>{" "}
-          so each thread auto-assigns to the recruiter who owns the number.
+          Open <strong>Converse App → Conversations → Converse Desk Layouts</strong>{" "}
+          and create a layout that defines which Global and Conversation filters
+          your recruiters see in the inbox.
         </P>
-        <P>
-          Enable <em>AI Reply Suggestions</em> in Converse Settings → <em>AI</em>.
-          Suggestions are grounded on the candidate record + prior thread.
-        </P>
-        <Screenshot
-          src={converseApps}
-          caption="Converse Desk lives alongside Converse Apps in Salesforce — drop the Lightning Component into the Recruiter Console."
+
+        <Steps>
+          <Step title="Click Create New Layout">
+            Under <em>Configure Converse Desk Layout</em>, click{" "}
+            <strong>Create New Layout</strong>. The Create New Layout popup opens.
+          </Step>
+          <Step title="Name the layout">
+            Enter a layout name like <code>Wavelength Recruiters</code>.
+          </Step>
+          <Step title="Pick Global & Conversation Filters">
+            Tick relevant Global Filters (Account, Case, Contact, Lead, Opportunity)
+            and Conversation Filters (All, Unread, Open Conversations, Follow Ups
+            etc.) to scope the inbox to recruiter work.
+          </Step>
+          <Step title="Assign users / profiles">
+            In the bottom search, select the user profiles that should see this
+            layout, then click <strong>Save</strong>.
+          </Step>
+          <Step title="Theme the desk">
+            Switch to the <strong>Conversations</strong> tab. Under{" "}
+            <em>Color · Select a color or pattern for the desk theme</em>,
+            pick the brand swatch and click <em>Preview Theme</em>.
+          </Step>
+        </Steps>
+
+        <GuidedSnapshot
+          step="Snapshot 1"
+          src={desk1}
+          caption="Create New Layout popup — name the layout, pick Global Filters (Account, Case, Contact, Lead, Opportunity) and Conversation Filters (All, Unread, Closed, etc.) and assign users / profiles."
+          source={{ label: "sms-magic.co · Conversations Guide", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/222converse_desk159/" }}
+        />
+        <GuidedSnapshot
+          step="Snapshot 2"
+          src={desk2}
+          caption="Conversations tab — Converse Desk Layouts, Message Settings and General Settings sub-tabs. The Color section themes the desk for recruiters."
           source={{ label: "sms-magic.co · Converse Desk", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/222converse_desk159/" }}
         />
 
-        <VideoTutorials
+        <VideoSection
           videos={[
-            { title: "Converse Desk overview & inbox", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/222converse_desk159/", duration: "4 min" },
-            { title: "Routing inbound replies to recruiters", href: "https://www.sms-magic.co/docs/videos/", duration: "3 min" },
-            { title: "AI Reply Suggestions setup", href: "https://www.sms-magic.co/docs/videos/", duration: "5 min" },
-            { title: "All Conversive video tutorials", href: "https://www.sms-magic.co/docs/videos/" },
+            { title: "Converse Desk Admin Tutorial (official)", href: "https://www.sms-magic.co/docs/videos/", duration: "7 min" },
+            { title: "Conversations Guide overview", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/222converse_desk159/", duration: "5 min" },
+            { title: "Routing inbound replies", href: "https://www.sms-magic.co/docs/videos/", duration: "3 min" },
           ]}
         />
-      </AudienceSection>
+      </PersonaOnly>
 
-      <AudienceSection audience="dev" title="Subscribe to inbound message events">
+      <PersonaOnly audience="dev">
+        <H2 id="dev">Bidirectional logic</H2>
+        <P>
+          Outgoing replies are inserted into <code>smagicinteract__smsMagic__c</code>
+          with <code>Direction__c = 'OUT'</code>. Inbound messages arrive on the
+          incoming webhook and create a thread record automatically.
+        </P>
         <CodeBlock
           tabs={[
             {
-              label: "Webhook",
+              label: "Apex / Code",
+              language: "apex",
+              code: `// Outgoing reply
+smagicinteract__smsMagic__c reply = new smagicinteract__smsMagic__c();
+reply.smagicinteract__Direction__c = 'OUT';
+reply.smagicinteract__SMSText__c   = 'The hospital is in Shoalhaven, Tim.';
+insert reply;`,
+            },
+            {
+              label: "Request JSON (incoming)",
               language: "json",
-              code: `// POST {your_listener}/conversive/inbound
-{
-  "event": "message.inbound",
-  "delivered_at": "2026-04-22T09:18:44Z",
-  "data": {
-    "thread_id": "thr_01HX9F2A",
-    "from": "+61412345678",
-    "to_sender_id": "+61480123007",
-    "body": "Yes, I'm available Mon! Is accommodation included?",
-    "candidate_id": "0038x00000XYZ12",
-    "recruiter_user_id": "0058x00000ABC1"
-  }
+              code: `{
+  "event": "message.received",
+  "from": "+61400000000",
+  "text": "Where exactly is this?"
+}`,
+            },
+            {
+              label: "Response JSON",
+              language: "json",
+              code: `{
+  "status": "received",
+  "thread_id": "thread_8821"
 }`,
             },
           ]}
         />
-      </AudienceSection>
+        <P className="text-xs text-ink-soft">
+          Reference: <a className="text-teal underline" target="_blank" rel="noreferrer" href="https://www.sms-magic.co/docs/developers/knowledge-base-category/sms-magic-for-developers/">SMS-Magic Developer Knowledge Base</a>.
+        </P>
+      </PersonaOnly>
+
+      <Callout variant="info" title="Up next — Auto-Reminders">
+        Steps 5 (Auto-Reminders) and 6 (Recurring Alerts) are scheduled for the
+        next prototype release. They'll showcase <code>@future(callout=true)</code>
+        and <code>Schedulable</code> patterns for dev, and the Message Automation
+        Library for admins.
+      </Callout>
     </PageShell>
   );
 }
