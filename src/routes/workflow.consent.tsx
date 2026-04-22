@@ -3,6 +3,8 @@ import { PageShell, H2, P, Steps, Step } from "@/components/docs/PageShell";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import { Callout } from "@/components/docs/Callout";
 import { AudienceSection } from "@/components/docs/PersonaBadge";
+import { Screenshot, VideoTutorials } from "@/components/docs/AdminMedia";
+import videoLibrary from "@/assets/sf-video-library.png";
 
 export const Route = createFileRoute("/workflow/consent")({
   head: () => ({
@@ -90,6 +92,23 @@ function Consent() {
             within 200ms of the inbound message.
           </Step>
         </Steps>
+
+        <Screenshot
+          src={videoLibrary}
+          caption="Multichannel Compliance video library — step-by-step walkthroughs covering Consent setup, double Opt-in, and Audit Database."
+          source={{ label: "sms-magic.co · Compliance docs", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/multichannel-compliance-configuration/" }}
+        />
+
+        <VideoTutorials
+          videos={[
+            { title: "Create Consent Manually", href: "https://www.sms-magic.co/docs/videos/", duration: "3 min" },
+            { title: "Step 1 · Setup Audit Database", href: "https://www.sms-magic.co/docs/videos/", duration: "4 min" },
+            { title: "Step 2 · Configure Consent Method & Content", href: "https://www.sms-magic.co/docs/videos/", duration: "5 min" },
+            { title: "Step 3 · Configure double Opt-in", href: "https://www.sms-magic.co/docs/videos/", duration: "4 min" },
+            { title: "Step 4 · Configure Keywords (STOP / START)", href: "https://www.sms-magic.co/docs/videos/", duration: "3 min" },
+            { title: "All Multichannel Compliance docs", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/multichannel-compliance-configuration/" },
+          ]}
+        />
       </AudienceSection>
 
       <AudienceSection audience="dev" title="Read consent status & subscribe to webhooks">

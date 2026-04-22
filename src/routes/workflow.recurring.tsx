@@ -3,6 +3,8 @@ import { PageShell, H2, P } from "@/components/docs/PageShell";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import { Callout } from "@/components/docs/Callout";
 import { AudienceSection } from "@/components/docs/PersonaBadge";
+import { Screenshot, VideoTutorials } from "@/components/docs/AdminMedia";
+import converseApps from "@/assets/sf-converse-apps.png";
 
 export const Route = createFileRoute("/workflow/recurring")({
   head: () => ({
@@ -63,6 +65,21 @@ function Recurring() {
           batch (≈3,400 locums across 4 regions) completes in &lt; 90 seconds
           without rate-limit errors.
         </Callout>
+
+        <Screenshot
+          src={converseApps}
+          caption="Message Automation Library lives under the same Converse Apps → Setup menu — pick Automation to build recurring schedules."
+          source={{ label: "sms-magic.co · Automate Message Flow", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/automate-message-flow/" }}
+        />
+
+        <VideoTutorials
+          videos={[
+            { title: "Automate Message Flow — recurring sends", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/automate-message-flow/", duration: "6 min" },
+            { title: "Building templates for recurring alerts", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/configure-a-converse-app/", duration: "5 min" },
+            { title: "Compliance for outbound batches", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/multichannel-compliance-configuration/", duration: "4 min" },
+            { title: "All Conversive video tutorials", href: "https://www.sms-magic.co/docs/videos/" },
+          ]}
+        />
       </AudienceSection>
 
       <AudienceSection audience="dev" title="Schedule via API">

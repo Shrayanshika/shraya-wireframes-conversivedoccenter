@@ -3,6 +3,8 @@ import { PageShell, H2, P, Steps, Step } from "@/components/docs/PageShell";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import { Callout } from "@/components/docs/Callout";
 import { AudienceSection } from "@/components/docs/PersonaBadge";
+import { Screenshot, VideoTutorials } from "@/components/docs/AdminMedia";
+import converseApps from "@/assets/sf-converse-apps.png";
 
 export const Route = createFileRoute("/workflow/reminders")({
   head: () => ({
@@ -72,6 +74,21 @@ function Reminders() {
             backfill any interviews scheduled in the next 14 days.
           </Step>
         </Steps>
+
+        <Screenshot
+          src={converseApps}
+          caption="Open Converse Apps → Setup → Automation to define the date-field trigger that powers Interview Reminders."
+          source={{ label: "sms-magic.co · Automate Message Flow", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/automate-message-flow/" }}
+        />
+
+        <VideoTutorials
+          videos={[
+            { title: "Automate Message Flow walkthrough", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/automate-message-flow/", duration: "6 min" },
+            { title: "Configure a Converse App (Templates & Automation)", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/configure-a-converse-app/", duration: "5 min" },
+            { title: "Converse Desk — handling reminder replies", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/222converse_desk159/", duration: "4 min" },
+            { title: "All Conversive video tutorials", href: "https://www.sms-magic.co/docs/videos/" },
+          ]}
+        />
       </AudienceSection>
 
       <AudienceSection audience="dev" title="Define a trigger via API">

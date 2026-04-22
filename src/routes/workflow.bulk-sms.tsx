@@ -3,6 +3,8 @@ import { PageShell, H2, P, Steps, Step } from "@/components/docs/PageShell";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import { Callout } from "@/components/docs/Callout";
 import { AudienceSection } from "@/components/docs/PersonaBadge";
+import { Screenshot, VideoTutorials } from "@/components/docs/AdminMedia";
+import converseApps from "@/assets/sf-converse-apps.png";
 
 export const Route = createFileRoute("/workflow/bulk-sms")({
   head: () => ({
