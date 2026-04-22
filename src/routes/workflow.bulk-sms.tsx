@@ -3,6 +3,8 @@ import { PageShell, H2, P, Steps, Step } from "@/components/docs/PageShell";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import { Callout } from "@/components/docs/Callout";
 import { AudienceSection } from "@/components/docs/PersonaBadge";
+import { Screenshot, VideoTutorials } from "@/components/docs/AdminMedia";
+import converseApps from "@/assets/sf-converse-apps.png";
 
 export const Route = createFileRoute("/workflow/bulk-sms")({
   head: () => ({
@@ -96,6 +98,21 @@ function BulkSms() {
             shortlist or <strong>STOP</strong> to opt out. — Wavelength
           </div>
         </div>
+
+        <Screenshot
+          src={converseApps}
+          caption="Converse Apps → Setup → Bulk Campaign — the same Setup menu where Templates and Automation live also launches Bulk Campaigns."
+          source={{ label: "sms-magic.co · Run SMS Campaign", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/configure-run-sms-campaign-button-in-classic/" }}
+        />
+
+        <VideoTutorials
+          videos={[
+            { title: "Configure & run an SMS Campaign", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/configure-run-sms-campaign-button-in-classic/", duration: "6 min" },
+            { title: "Building your first Campaign", href: "https://www.sms-magic.co/docs/videos/", duration: "5 min" },
+            { title: "Multichannel Compliance Configuration", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/multichannel-compliance-configuration/" },
+            { title: "All Conversive video tutorials", href: "https://www.sms-magic.co/docs/videos/" },
+          ]}
+        />
       </AudienceSection>
 
       <AudienceSection audience="dev" title="Send a bulk campaign via API">

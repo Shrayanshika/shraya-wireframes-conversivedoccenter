@@ -3,6 +3,9 @@ import { PageShell, H2, P, Steps, Step } from "@/components/docs/PageShell";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import { Callout } from "@/components/docs/Callout";
 import { AudienceSection } from "@/components/docs/PersonaBadge";
+import { Screenshot, VideoTutorials } from "@/components/docs/AdminMedia";
+import senderIdSteps from "@/assets/sf-sender-id-steps.png";
+import converseApps from "@/assets/sf-converse-apps.png";
 
 export const Route = createFileRoute("/workflow/sender-ids")({
   head: () => ({
@@ -94,6 +97,26 @@ function SenderIds() {
             </tbody>
           </table>
         </div>
+
+        <Screenshot
+          src={converseApps}
+          caption="Converse Apps tab in Salesforce — entry point to configure the Converse App that powers Sender ID routing."
+          source={{ label: "sms-magic.co · Configure Converse App", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/configure-a-converse-app/" }}
+        />
+        <Screenshot
+          src={senderIdSteps}
+          caption="Search & Assign Sender ID flow — filter the Sender Pool and lock each long-code to a recruiter User."
+          source={{ label: "sms-magic.co · Search & Assign Sender ID", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/search-and-assign-sender-id/" }}
+        />
+
+        <VideoTutorials
+          videos={[
+            { title: "Registration & Setup", href: "https://www.sms-magic.co/docs/videos/", duration: "3 min" },
+            { title: "Configure a Converse App", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/configure-a-converse-app/", duration: "5 min" },
+            { title: "Search & Assign Sender ID", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/search-and-assign-sender-id/", duration: "4 min" },
+            { title: "All Conversive video tutorials", href: "https://www.sms-magic.co/docs/videos/" },
+          ]}
+        />
       </AudienceSection>
 
       <AudienceSection audience="dev" title="Programmatic assignment via API">

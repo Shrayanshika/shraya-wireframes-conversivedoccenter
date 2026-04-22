@@ -3,6 +3,8 @@ import { PageShell, H2, P } from "@/components/docs/PageShell";
 import { Callout } from "@/components/docs/Callout";
 import { AudienceSection } from "@/components/docs/PersonaBadge";
 import { CodeBlock } from "@/components/docs/CodeBlock";
+import { Screenshot, VideoTutorials } from "@/components/docs/AdminMedia";
+import converseApps from "@/assets/sf-converse-apps.png";
 
 export const Route = createFileRoute("/workflow/converse-desk")({
   head: () => ({
@@ -124,12 +126,20 @@ function ConverseDesk() {
           Enable <em>AI Reply Suggestions</em> in Converse Settings → <em>AI</em>.
           Suggestions are grounded on the candidate record + prior thread.
         </P>
-        <Callout variant="tip" title="Video walkthrough">
-          See the 4-min Converse Desk video at{" "}
-          <a className="text-teal underline" href="https://www.sms-magic.co/docs/videos/" target="_blank" rel="noreferrer">
-            sms-magic.co/docs/videos
-          </a>.
-        </Callout>
+        <Screenshot
+          src={converseApps}
+          caption="Converse Desk lives alongside Converse Apps in Salesforce — drop the Lightning Component into the Recruiter Console."
+          source={{ label: "sms-magic.co · Converse Desk", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/222converse_desk159/" }}
+        />
+
+        <VideoTutorials
+          videos={[
+            { title: "Converse Desk overview & inbox", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/222converse_desk159/", duration: "4 min" },
+            { title: "Routing inbound replies to recruiters", href: "https://www.sms-magic.co/docs/videos/", duration: "3 min" },
+            { title: "AI Reply Suggestions setup", href: "https://www.sms-magic.co/docs/videos/", duration: "5 min" },
+            { title: "All Conversive video tutorials", href: "https://www.sms-magic.co/docs/videos/" },
+          ]}
+        />
       </AudienceSection>
 
       <AudienceSection audience="dev" title="Subscribe to inbound message events">
