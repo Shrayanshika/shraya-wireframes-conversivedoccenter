@@ -9,7 +9,7 @@ export const Route = createFileRoute("/")({
       { title: "Conversive Copilot — Find your guide" },
       { name: "description", content: "Tell the Conversive Copilot your industry, role and CRM. Get a purpose-built documentation path tailored to your build." },
       { property: "og:title", content: "Conversive Docs · Copilot Home" },
-      { property: "og:description", content: "Conversational discovery for the Conversive documentation center, powered by Fern." },
+      { property: "og:description", content: "Conversational discovery for the Conversive documentation center." },
     ],
   }),
   component: CopilotHome,
