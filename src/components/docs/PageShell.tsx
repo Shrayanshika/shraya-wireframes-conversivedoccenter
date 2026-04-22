@@ -116,11 +116,10 @@ export function Steps({ children }: { children: ReactNode }) {
 export function Step({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <li className="relative [counter-increment:step]">
-      <span className="absolute -left-[33px] flex h-6 w-6 items-center justify-center rounded-full bg-navy-deep font-mono text-xs font-bold text-teal-bright">
-        <span>·</span>
-        <span className="absolute font-display text-[11px]">{}</span>
-      </span>
-      <span className="absolute -left-[33px] flex h-6 w-6 items-center justify-center rounded-full bg-navy-deep font-display text-[11px] font-bold text-teal-bright before:content-[counter(step)]" />
+      <span
+        aria-hidden
+        className="absolute -left-[34px] flex h-6 w-6 items-center justify-center rounded-full bg-navy-deep font-display text-[11px] font-bold text-teal-bright before:content-[counter(step)]"
+      />
       <div className="font-semibold text-foreground">{title}</div>
       {children && <div className="mt-1 text-sm text-ink-soft">{children}</div>}
     </li>
