@@ -9,7 +9,7 @@ export const Route = createFileRoute("/")({
       { title: "Conversive Copilot — Find your guide" },
       { name: "description", content: "Tell the Conversive Copilot your industry, role and CRM. Get a purpose-built documentation path tailored to your build." },
       { property: "og:title", content: "Conversive Docs · Copilot Home" },
-      { property: "og:description", content: "Conversational discovery for the Conversive documentation center, powered by Fern." },
+      { property: "og:description", content: "Conversational discovery for the Conversive documentation center." },
     ],
   }),
   component: CopilotHome,
@@ -95,7 +95,7 @@ function CopilotHome() {
         {/* Header */}
         <div className="text-center">
           <div className="mx-auto mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-teal-bright backdrop-blur">
-            <Sparkles className="h-3 w-3" /> Conversive Copilot · Powered by Fern
+            <Sparkles className="h-3 w-3" /> Conversive Copilot
           </div>
           <h1 className="font-display text-3xl font-bold tracking-tight text-white sm:text-5xl">
             What are you building today?
