@@ -42,16 +42,16 @@ export function SOPDiagram({
           }}
         />
 
-        <ol className="relative flex flex-wrap items-center justify-center gap-x-2 gap-y-3 px-4 py-6">
+        <ol className="relative flex flex-nowrap items-center justify-center gap-1.5 overflow-x-auto px-4 py-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {nodes.map((n, i) => {
             const isPrimary = n.tone === "primary";
             const isSuccess = n.tone === "success";
             const Icon = n.icon;
             const isLast = i === nodes.length - 1;
             return (
-              <li key={i} className="flex items-center gap-2">
+              <li key={i} className="flex shrink-0 items-center gap-1.5">
                 <div
-                  className={`group flex items-center gap-2 rounded-md border px-3 py-1.5 shadow-sm transition ${
+                  className={`group flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md border px-2.5 py-1.5 shadow-sm transition ${
                     isPrimary
                       ? "border-navy/20 bg-navy-deep text-white"
                       : isSuccess
@@ -61,7 +61,7 @@ export function SOPDiagram({
                 >
                   {Icon && (
                     <Icon
-                      className={`h-3.5 w-3.5 shrink-0 ${
+                      className={`h-3 w-3 shrink-0 ${
                         isPrimary
                           ? "text-teal-bright"
                           : isSuccess
@@ -72,7 +72,7 @@ export function SOPDiagram({
                   )}
                   <div className="leading-tight">
                     <div
-                      className={`font-mono text-[8.5px] font-semibold uppercase tracking-[0.14em] ${
+                      className={`font-mono text-[8px] font-semibold uppercase tracking-[0.12em] ${
                         isPrimary
                           ? "text-white/55"
                           : isSuccess
@@ -83,7 +83,7 @@ export function SOPDiagram({
                       Step {i + 1}
                     </div>
                     <div
-                      className={`font-display text-[12.5px] font-semibold ${
+                      className={`font-display text-[11px] font-semibold leading-tight ${
                         isPrimary ? "text-white" : "text-foreground"
                       }`}
                     >
@@ -91,7 +91,7 @@ export function SOPDiagram({
                     </div>
                     {n.sub && (
                       <div
-                        className={`font-mono text-[9.5px] leading-tight ${
+                        className={`font-mono text-[8.5px] leading-tight ${
                           isPrimary
                             ? "text-white/65"
                             : isSuccess
@@ -106,7 +106,7 @@ export function SOPDiagram({
                 </div>
                 {!isLast && (
                   <ArrowRight
-                    className="h-3.5 w-3.5 shrink-0 text-ink-soft/40"
+                    className="h-3 w-3 shrink-0 text-ink-soft/40"
                     aria-hidden
                   />
                 )}
