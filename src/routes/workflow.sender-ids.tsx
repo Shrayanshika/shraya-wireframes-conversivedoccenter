@@ -2,16 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageShell, H2, P, Steps, Step } from "@/components/docs/PageShell";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import { Callout } from "@/components/docs/Callout";
-import { AudienceSection } from "@/components/docs/PersonaBadge";
-import { Screenshot, VideoTutorials } from "@/components/docs/AdminMedia";
-import senderIdSteps from "@/assets/sf-sender-id-steps.png";
-import converseApps from "@/assets/sf-converse-apps.png";
+import { PersonaOnly } from "@/lib/persona";
+import { GuidedSnapshot, VideoSection, Prerequisites } from "@/components/docs/GuidedSnapshot";
+import { SOPDiagram } from "@/components/docs/SOPDiagram";
+import { User, IdCard, Database, Send } from "lucide-react";
+import senderId1 from "@/assets/sender_id1.png";
+import senderId2 from "@/assets/sender_id2.png";
 
 export const Route = createFileRoute("/workflow/sender-ids")({
   head: () => ({
     meta: [
       { title: "Assign Sender IDs — Conversive" },
-      { name: "description", content: "Map unique Sender IDs to each of 42 recruiters for 1:1 consistent SMS messaging in Salesforce." },
+      { name: "description", content: "Map dedicated Sender IDs 1:1 to each recruiter for consistent SMS conversations in Salesforce." },
       { property: "og:title", content: "Step 1 · Assign Sender IDs" },
       { property: "og:description", content: "Identity layer for the Wavelength recruitment build." },
     ],
@@ -37,129 +39,121 @@ function SenderIds() {
         Salesforce User so outbound and inbound stay on the same thread.
       </Callout>
 
-      <H2 id="prereqs">Prerequisites</H2>
-      <P>
-        You'll need an active Conversive org, the <strong>Converse App</strong>
-        package installed in Salesforce, and SMS_Admin permission set assigned
-        to the user running setup.
-      </P>
+      <SOPDiagram
+        title="Sender ID assignment flow"
+        caption="A Salesforce User record is mapped to one Sender ID drawn from the SMS-Magic pool, then locked for inbound + outbound continuity."
+        nodes={[
+          { label: "User Record", sub: "Salesforce", icon: User },
+          { label: "Salesforce User ID", sub: "0058x00000…", icon: IdCard },
+          { label: "Sender ID Pool", sub: "SMS-Magic", icon: Database, tone: "primary" },
+          { label: "Assigned", sub: "Static routing ON", icon: Send, tone: "success" },
+        ]}
+      />
 
-      <AudienceSection audience="admin" title="Salesforce Console — Search & Assign Sender ID">
+      <Prerequisites
+        items={[
+          { label: "Watch · Conversive Onboarding Primer (5m)", href: "#video-onboarding-primer", note: "dummy walkthrough video" },
+          { label: "Permission Set · SMS_Admin assigned to setup user", href: "#perm-sms-admin" },
+          { label: "Converse App package installed in Salesforce org", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/configure-a-converse-app/" },
+        ]}
+      />
+
+      <PersonaOnly audience="admin">
+        <H2 id="setup">Salesforce Console — Search & Assign Sender ID</H2>
+        <P>
+          Open the Converse App and follow the two-tab flow: <strong>Add Sender ID</strong>{" "}
+          to procure numbers, then <strong>Assign Sender ID</strong> to map them
+          to recruiter Users.
+        </P>
+
         <Steps>
-          <Step title="Open the Converse App builder">
-            Salesforce → App Launcher → <em>Converse Settings</em> → <strong>Sender ID Management</strong>.
+          <Step title="Open Sender ID Management">
+            Salesforce → App Launcher → <em>Converse Settings</em> → <strong>Sender ID Assignment</strong>.
           </Step>
-          <Step title="Search the Sender Pool">
-            Filter by country (AU), capability (SMS, 2-way), and availability.
-            Select 42 long-codes from the pool.
+          <Step title="Add channel-specific Sender IDs">
+            On the <strong>Add Sender ID</strong> tab, browse the pool and add
+            SMS, WhatsApp, or LINE numbers. Channel type appears automatically
+            in the table.
           </Step>
-          <Step title="Assign to recruiter Users">
-            Drag each number to a Salesforce User record. The mapping is
-            written to <code>smagicinteract__SenderID__c</code> and respected
-            on every outbound send.
+          <Step title="Switch to Assign Sender ID">
+            On the <strong>Assign Sender ID</strong> tab, select one or more
+            Users via checkbox and click <em>Assign Sender ID(s)</em>.
           </Step>
-          <Step title="Lock the assignment">
-            Toggle <em>Static Routing</em> to <strong>ON</strong> so inbound
-            replies always land in the assigned recruiter's Converse Desk inbox.
+          <Step title="Lock as default per recruiter">
+            Mark the chosen number as the recruiter's <strong>Default Sender ID</strong>{" "}
+            so every outbound from their record uses the same long-code.
           </Step>
         </Steps>
-        <div className="mt-4 overflow-hidden rounded-lg border border-border bg-surface-2">
-          <div className="border-b border-border bg-card px-4 py-2 text-xs font-medium text-ink-soft">
-            Salesforce · Sender ID Management
-          </div>
-          <table className="w-full text-sm">
-            <thead className="bg-muted text-xs uppercase text-ink-soft">
-              <tr>
-                <th className="px-4 py-2 text-left">Sender ID</th>
-                <th className="px-4 py-2 text-left">Recruiter</th>
-                <th className="px-4 py-2 text-left">Region</th>
-                <th className="px-4 py-2 text-left">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ["+61 480 123 007", "Jaspreet Singh", "NSW", "Active"],
-                ["+61 480 123 011", "Mei Tan", "VIC", "Active"],
-                ["+61 480 123 023", "Liam O'Connor", "QLD", "Active"],
-                ["+61 480 123 042", "Ana Cordeiro", "WA", "Active"],
-              ].map((r) => (
-                <tr key={r[0]} className="border-t border-border">
-                  <td className="px-4 py-2 font-mono text-xs">{r[0]}</td>
-                  <td className="px-4 py-2">{r[1]}</td>
-                  <td className="px-4 py-2 text-ink-soft">{r[2]}</td>
-                  <td className="px-4 py-2">
-                    <span className="rounded-full bg-[oklch(0.94_0.06_150)] px-2 py-0.5 text-[11px] font-semibold text-[oklch(0.4_0.14_150)]">
-                      ● {r[3]}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
 
-        <Screenshot
-          src={converseApps}
-          caption="Converse Apps tab in Salesforce — entry point to configure the Converse App that powers Sender ID routing."
-          source={{ label: "sms-magic.co · Configure Converse App", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/configure-a-converse-app/" }}
-        />
-        <Screenshot
-          src={senderIdSteps}
-          caption="Search & Assign Sender ID flow — filter the Sender Pool and lock each long-code to a recruiter User."
+        <GuidedSnapshot
+          step="Snapshot 1"
+          src={senderId1}
+          caption="Add Sender ID & Assign Sender ID tabs — the table lists Sender ID, Label, Channel and Incoming Number for each long-code in the pool."
           source={{ label: "sms-magic.co · Search & Assign Sender ID", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/search-and-assign-sender-id/" }}
         />
+        <GuidedSnapshot
+          step="Snapshot 2"
+          src={senderId2}
+          caption="Channel Type Assignment — the Sender ID table now reflects WhatsApp / SMS / LINE channels, and the Sender ID dropdown in the inbox shows channel-tagged options."
+          source={{ label: "sms-magic.co · Channel Type Assignment", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/search-and-assign-sender-id/" }}
+        />
 
-        <VideoTutorials
+        <VideoSection
           videos={[
-            { title: "Registration & Setup", href: "https://www.sms-magic.co/docs/videos/", duration: "3 min" },
+            { title: "How to Assign Sender ID (official video)", href: "https://www.sms-magic.co/docs/videos/", duration: "4 min" },
             { title: "Configure a Converse App", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/configure-a-converse-app/", duration: "5 min" },
-            { title: "Search & Assign Sender ID", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base/search-and-assign-sender-id/", duration: "4 min" },
-            { title: "All Conversive video tutorials", href: "https://www.sms-magic.co/docs/videos/" },
           ]}
         />
-      </AudienceSection>
+      </PersonaOnly>
 
-      <AudienceSection audience="dev" title="Programmatic assignment via API">
+      <PersonaOnly audience="dev">
+        <H2 id="dev">Programmatic mapping</H2>
         <P>
-          Need to bulk-provision recruiters from your HRIS? Use the Sender
-          Assignment endpoint. Conversive will reject duplicate mappings and
-          enforce one-to-one routing.
+          In the SMS-Magic Salesforce-native architecture, the Sender ID is
+          validated during object insertion or the <code>pushSMSCallout()</code>{" "}
+          execution. Bulk-provision recruiters from your HRIS using the snippets
+          below.
         </P>
         <CodeBlock
           tabs={[
             {
-              label: "cURL",
-              language: "bash",
-              code: `curl -X POST https://api.beconversive.com/v1/senders/assign \\
-  -H "Authorization: Bearer $CONVERSIVE_TOKEN" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "assignments": [
-      { "sender_id": "+61480123007", "user_id": "0058x00000ABC1", "static_routing": true },
-      { "sender_id": "+61480123011", "user_id": "0058x00000ABC2", "static_routing": true }
-    ]
-  }'`,
+              label: "Apex / Code",
+              language: "apex",
+              code: `smagicinteract__smsMagic__c smsObject = new smagicinteract__smsMagic__c();
+smsObject.smagicinteract__SenderId__c    = 'Recruiter_Unique_ID';
+smsObject.smagicinteract__PhoneNumber__c = '919623197650';
+smsObject.smagicinteract__SMSText__c     = 'Hello from Wavelength';
+smsObject.smagicinteract__external_field__c =
+    smagicinteract.ApexAPI.generateUniqueKey();
+insert smsObject;`,
             },
             {
-              label: "Apex",
-              language: "apex",
-              code: `List<smagicinteract__SenderID__c> assignments = new List<smagicinteract__SenderID__c>();
-for (User u : [SELECT Id, Recruiter_Phone__c FROM User WHERE Profile.Name = 'Recruiter']) {
-    assignments.add(new smagicinteract__SenderID__c(
-        Name = u.Recruiter_Phone__c,
-        smagicinteract__User__c = u.Id,
-        smagicinteract__StaticRouting__c = true
-    ));
-}
-insert assignments;`,
+              label: "Request JSON",
+              language: "json",
+              code: `{
+  "senderId": "Recruiter_Unique_ID",
+  "mobileNumber": "919623197650",
+  "text": "Hello from Wavelength"
+}`,
+            },
+            {
+              label: "Response JSON",
+              language: "json",
+              code: `{
+  "status": "queued",
+  "message_id": "generated_external_key"
+}`,
             },
           ]}
         />
-      </AudienceSection>
+        <p className="text-xs text-ink-soft">
+          Reference: <a className="text-teal underline" target="_blank" rel="noreferrer" href="https://www.sms-magic.co/docs/developers/knowledge-base-category/sms-magic-for-developers/">SMS-Magic Developer Knowledge Base</a>.
+        </p>
+      </PersonaOnly>
 
       <Callout variant="warn" title="One number, one recruiter">
         Reusing a Sender ID across multiple recruiters breaks 1:1 continuity
-        and confuses candidates mid-conversation. Always keep static routing on.
+        and confuses candidates mid-conversation. Always keep the Default Sender ID locked.
       </Callout>
     </PageShell>
   );

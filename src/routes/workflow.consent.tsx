@@ -2,15 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageShell, H2, P, Steps, Step } from "@/components/docs/PageShell";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import { Callout } from "@/components/docs/Callout";
-import { AudienceSection } from "@/components/docs/PersonaBadge";
-import { Screenshot, VideoTutorials } from "@/components/docs/AdminMedia";
-import videoLibrary from "@/assets/sf-video-library.png";
+import { PersonaOnly } from "@/lib/persona";
+import { GuidedSnapshot, VideoSection, Prerequisites } from "@/components/docs/GuidedSnapshot";
+import { SOPDiagram } from "@/components/docs/SOPDiagram";
+import { Contact, ToggleRight, Database, ShieldCheck } from "lucide-react";
+import consent1 from "@/assets/consent1.png";
+import consent2 from "@/assets/consent2.png";
 
 export const Route = createFileRoute("/workflow/consent")({
   head: () => ({
     meta: [
       { title: "Capture Consent — Conversive" },
-      { name: "description", content: "Sync Salesforce Communication Preferences with the Conversive Consent Object to keep every send compliant." },
+      { name: "description", content: "Configure Multichannel Compliance: Audit Database, Consent Method & Content, Double Opt-in and Keyword Management." },
       { property: "og:title", content: "Step 2 · Capture Consent" },
       { property: "og:description", content: "The trust layer for SMS recruitment." },
     ],
@@ -23,7 +26,7 @@ function Consent() {
     <PageShell
       eyebrow="Step 2 · Trust"
       title="Capture Consent"
-      description="Every Conversive send is gated by an explicit consent record. Wire your Salesforce Communication Preference fields to the Conversive Consent Object so opt-ins, opt-outs, and STOP keywords stay perfectly in sync."
+      description="Every Conversive send is gated by an explicit consent record. Use the four-step Multichannel Compliance setup to wire Audit Database, Consent Method, Double Opt-in and Keyword Management — then create custom Content Types when a campaign needs its own consent mode."
       breadcrumbs={[
         { label: "Docs", to: "/" },
         { label: "Wavelength Workflow" },
@@ -34,133 +37,125 @@ function Consent() {
     >
       <Callout variant="info" title="Why consent first?">
         Australian Spam Act and global TCPA regulations require provable opt-in.
-        Conversive's <code>consent_check: true</code> flag blocks sends to any
-        candidate without an active consent record — even if you forget.
+        Conversive blocks any send without an active consent record — even if you
+        forget the flag.
       </Callout>
 
-      <H2 id="model">The Consent Object</H2>
-      <P>
-        Conversive ships a managed object <code>conversive__Consent__c</code> with
-        these fields, joined to <code>Contact</code> / <code>Lead</code> /
-        <code>Candidate__c</code> via lookup.
-      </P>
+      <SOPDiagram
+        title="Consent capture flow"
+        caption="A Salesforce Contact's opt-in field syncs to the SMS-Magic Consent Object, which sets the active status read by every outbound dispatch."
+        nodes={[
+          { label: "Contact Record", sub: "Salesforce", icon: Contact },
+          { label: "Opt-in Field", sub: "SMS_Opt_In__c", icon: ToggleRight },
+          { label: "SMS-Magic Consent Object", sub: "conversive__Consent__c", icon: Database, tone: "primary" },
+          { label: "Status: Active", sub: "Send-eligible", icon: ShieldCheck, tone: "success" },
+        ]}
+      />
 
-      <div className="my-5 overflow-hidden rounded-lg border border-border">
-        <table className="w-full text-sm">
-          <thead className="bg-muted text-xs uppercase text-ink-soft">
-            <tr>
-              <th className="px-4 py-2 text-left">Field</th>
-              <th className="px-4 py-2 text-left">Type</th>
-              <th className="px-4 py-2 text-left">Purpose</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[
-              ["Channel__c", "Picklist", "SMS · WhatsApp · Voice"],
-              ["Status__c", "Picklist", "Opted-In · Opted-Out · Pending"],
-              ["Source__c", "Text", "Web form · Inbound STOP · Recruiter manual"],
-              ["Captured_At__c", "DateTime", "Audit trail timestamp"],
-              ["Expires_At__c", "DateTime", "Optional — for time-bound consent (EU)"],
-            ].map((r) => (
-              <tr key={r[0]} className="border-t border-border">
-                <td className="px-4 py-2 font-mono text-xs">{r[0]}</td>
-                <td className="px-4 py-2 text-ink-soft">{r[1]}</td>
-                <td className="px-4 py-2">{r[2]}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Prerequisites
+        items={[
+          { label: "Watch · Multichannel Compliance Overview (3m)", href: "#video-compliance-overview", note: "dummy preview video" },
+          { label: "Audit Database enabled in Converse App (Step 1)", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/multichannel-compliance-configuration/" },
+          { label: "SMS, WhatsApp or LINE Sender IDs assigned (see Step 1 of this guide)" },
+        ]}
+      />
 
-      <AudienceSection audience="admin" title="Map the field to Salesforce Communication Preferences">
+      <PersonaOnly audience="admin">
+        <H2 id="setup">Configure Consent Method & Content (Step 2 of 4)</H2>
+        <P>
+          From Multichannel Compliance, click into <strong>Step 2 · Consent
+          Method & Content</strong>. Here you choose the consent mode per
+          message source — Automated, Bulk and Interactive Conversations.
+        </P>
+
         <Steps>
-          <Step title="Open Communication Preferences">
-            Setup → Object Manager → <em>Contact</em> → Field Sets →{" "}
-            <strong>Communication Preferences</strong>.
+          <Step title="Open Multichannel Compliance">
+            Converse App → <em>SMS-Magic Setup</em> → <strong>Multichannel
+            Compliance</strong>. Confirm the toggle is <em>Enabled</em> at the top right.
           </Step>
-          <Step title="Add the SMS_Opt_In__c checkbox">
-            Drag the field onto the page layout. Mark it required for new candidates.
+          <Step title="Pick consent mode per source">
+            Under <strong>Consent For Source</strong>, use the drop-down beneath
+            each card — Automated, Bulk and Interactive Conversations — to set
+            <em> Consent Required</em> or <em>Consent Not Required</em>.
           </Step>
-          <Step title="Wire to the Consent Object">
-            In Converse Settings → <em>Consent Mapping</em>, link{" "}
-            <code>Contact.SMS_Opt_In__c</code> → <code>conversive__Consent__c.Status__c</code>.
-            Conversive will mirror changes both ways.
+          <Step title="Create a custom Content Type">
+            For campaigns that need a tighter rule, click <strong>Create New
+            Content Type</strong>. Define a unique name, pick a Consent Mode,
+            set message-sending limits and choose Applicable Sources.
           </Step>
-          <Step title="Enable inbound STOP handling">
-            Toggle <strong>Auto-Opt-Out on STOP/UNSUBSCRIBE keywords</strong> to ON.
-            The platform will write a new Consent record with status <em>Opted-Out</em>
-            within 200ms of the inbound message.
+          <Step title="Save & advance">
+            Save the wizard and continue to <em>Step 3 · Double Opt-in</em>{" "}
+            and <em>Step 4 · Keyword Management</em> for full compliance.
           </Step>
         </Steps>
 
-        <Screenshot
-          src={videoLibrary}
-          caption="Multichannel Compliance video library — step-by-step walkthroughs covering Consent setup, double Opt-in, and Audit Database."
-          source={{ label: "sms-magic.co · Compliance docs", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/multichannel-compliance-configuration/" }}
+        <GuidedSnapshot
+          step="Snapshot 1"
+          src={consent1}
+          caption="Multichannel Compliance · Step 2 — pick the consent mode for each source (Automated, Bulk, Interactive). Settings apply to SMS, LINE and Viber channels."
+          source={{ label: "sms-magic.co · Compliance Configuration", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/multichannel-compliance-configuration/" }}
+        />
+        <GuidedSnapshot
+          step="Snapshot 2"
+          src={consent2}
+          caption="Create New Content Type wizard — define name, consent mode, sending limits and applicable sources for campaign-specific consent rules."
+          source={{ label: "sms-magic.co · Content Types", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/multichannel-compliance-configuration/" }}
         />
 
-        <VideoTutorials
+        <VideoSection
           videos={[
-            { title: "Create Consent Manually", href: "https://www.sms-magic.co/docs/videos/", duration: "3 min" },
+            { title: "Consent Setup Tutorial (official)", href: "https://www.sms-magic.co/docs/videos/", duration: "5 min" },
             { title: "Step 1 · Setup Audit Database", href: "https://www.sms-magic.co/docs/videos/", duration: "4 min" },
-            { title: "Step 2 · Configure Consent Method & Content", href: "https://www.sms-magic.co/docs/videos/", duration: "5 min" },
-            { title: "Step 3 · Configure double Opt-in", href: "https://www.sms-magic.co/docs/videos/", duration: "4 min" },
-            { title: "Step 4 · Configure Keywords (STOP / START)", href: "https://www.sms-magic.co/docs/videos/", duration: "3 min" },
-            { title: "All Multichannel Compliance docs", href: "https://www.sms-magic.co/docs/salesforce/knowledge-base-category/multichannel-compliance-configuration/" },
+            { title: "Step 3 · Double Opt-in", href: "https://www.sms-magic.co/docs/videos/", duration: "4 min" },
+            { title: "Step 4 · Keyword Management (STOP / START)", href: "https://www.sms-magic.co/docs/videos/", duration: "3 min" },
           ]}
         />
-      </AudienceSection>
+      </PersonaOnly>
 
-      <AudienceSection audience="dev" title="Read consent status & subscribe to webhooks">
+      <PersonaOnly audience="dev">
+        <H2 id="dev">Webhook integration</H2>
+        <P>
+          Sync external opt-in events (web forms, IVR, partner APIs) into
+          Salesforce by listening to Conversive consent webhooks and updating
+          the Contact's <code>Consent__c</code> field.
+        </P>
         <CodeBlock
           tabs={[
             {
-              label: "GET",
-              language: "bash",
-              code: `curl https://api.beconversive.com/v1/consent-status?phone=%2B61412345678&channel=sms \\
-  -H "Authorization: Bearer $CONVERSIVE_TOKEN"`,
+              label: "Code (Node.js)",
+              language: "javascript",
+              code: `app.post('/consent-webhook', (req, res) => {
+  const { contact_id, status } = req.body;
+  // Logic to update Salesforce Contact.Consent__c via JSForce
+  res.status(200).send({ success: true });
+});`,
             },
             {
-              label: "Response",
+              label: "Request JSON",
               language: "json",
               code: `{
-  "phone": "+61412345678",
-  "channel": "sms",
-  "status": "opted_in",
-  "source": "web_form",
-  "captured_at": "2026-03-12T04:18:09Z",
-  "expires_at": null,
-  "candidate_id": "0038x00000XYZ12"
+  "event": "consent.updated",
+  "contact_id": "003XXXXXXXXXXXX",
+  "status": "OPTED_IN",
+  "source": "WebForm"
 }`,
             },
             {
-              label: "Webhook",
+              label: "Response JSON",
               language: "json",
-              code: `// POST {your_listener}/conversive/consent
-{
-  "event": "consent.updated",
-  "delivered_at": "2026-04-22T09:14:02Z",
-  "data": {
-    "phone": "+61412345678",
-    "previous_status": "opted_in",
-    "status": "opted_out",
-    "source": "inbound_stop",
-    "candidate_id": "0038x00000XYZ12"
-  }
-}`,
+              code: `{ "success": true, "updated": true }`,
             },
           ]}
         />
-        <P>
-          Verify webhook signatures with the <code>X-Conversive-Signature</code>
-          header (HMAC-SHA256 of the raw body using your webhook secret).
-        </P>
-      </AudienceSection>
+        <p className="text-xs text-ink-soft">
+          Reference: <a className="text-teal underline" target="_blank" rel="noreferrer" href="https://www.sms-magic.co/docs/developers/knowledge-base-category/sms-magic-for-developers/">SMS-Magic Developer Knowledge Base</a>.
+        </p>
+      </PersonaOnly>
 
-      <Callout variant="warn" title="Never bypass consent_check">
-        Sending with <code>consent_check: false</code> is reserved for transactional
-        flows your legal team has signed off on (e.g. interview confirmations).
-        Marketing broadcasts must always honour the consent ledger.
+      <Callout variant="warn" title="Content Types override sources">
+        The consent method defined at the Content level takes precedence over
+        the source-level setting. Use Content Types when one campaign needs
+        a stricter rule than your default.
       </Callout>
     </PageShell>
   );
