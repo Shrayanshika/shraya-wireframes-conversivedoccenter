@@ -42,7 +42,7 @@ export function SOPDiagram({
           }}
         />
 
-        <ol className="relative flex flex-wrap items-center justify-center gap-x-2 gap-y-3 px-4 py-6">
+        <ol className="relative flex flex-nowrap items-center justify-center gap-1.5 overflow-x-auto px-4 py-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {nodes.map((n, i) => {
             const isPrimary = n.tone === "primary";
             const isSuccess = n.tone === "success";
