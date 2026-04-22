@@ -66,7 +66,7 @@ function Consent() {
           From Multichannel Compliance, click into <strong>Step 2 · Consent
           Method & Content</strong>. Here you choose the consent mode per
           message source — Automated, Bulk and Interactive Conversations.
-        </P>
+        </p>
 
         <Steps>
           <Step title="Open Multichannel Compliance">
@@ -118,7 +118,7 @@ function Consent() {
           Sync external opt-in events (web forms, IVR, partner APIs) into
           Salesforce by listening to Conversive consent webhooks and updating
           the Contact's <code>Consent__c</code> field.
-        </P>
+        </p>
         <CodeBlock
           tabs={[
             {
@@ -147,9 +147,9 @@ function Consent() {
             },
           ]}
         />
-        <P className="text-xs text-ink-soft">
+        <p className="text-xs text-ink-soft">
           Reference: <a className="text-teal underline" target="_blank" rel="noreferrer" href="https://www.sms-magic.co/docs/developers/knowledge-base-category/sms-magic-for-developers/">SMS-Magic Developer Knowledge Base</a>.
-        </P>
+        </p>
       </PersonaOnly>
 
       <Callout variant="warn" title="Content Types override sources">

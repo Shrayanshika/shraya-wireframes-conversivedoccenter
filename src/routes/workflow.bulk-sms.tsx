@@ -92,7 +92,7 @@ function BulkSms() {
           objects you'll touch during a campaign — Contacts, Leads, Channel
           Events, Communication Subscription Consents and the SMS-Magic
           objects all live here.
-        </P>
+        </p>
 
         <GuidedSnapshot
           step="Snapshot 2"
@@ -147,9 +147,9 @@ String response = smagicinteract.ApexAPI.pushSMSCallout(smsList);`,
             },
           ]}
         />
-        <P className="text-xs text-ink-soft">
+        <p className="text-xs text-ink-soft">
           Reference: <a className="text-teal underline" target="_blank" rel="noreferrer" href="https://www.sms-magic.co/docs/developers/knowledge-base-category/sms-magic-for-developers/">SMS-Magic Developer Knowledge Base</a>.
-        </P>
+        </p>
       </PersonaOnly>
 
       <Callout variant="success" title="Wavelength benchmark">

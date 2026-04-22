@@ -64,7 +64,7 @@ function SenderIds() {
           Open the Converse App and follow the two-tab flow: <strong>Add Sender ID</strong>{" "}
           to procure numbers, then <strong>Assign Sender ID</strong> to map them
           to recruiter Users.
-        </P>
+        </p>
 
         <Steps>
           <Step title="Open Sender ID Management">
@@ -113,7 +113,7 @@ function SenderIds() {
           validated during object insertion or the <code>pushSMSCallout()</code>{" "}
           execution. Bulk-provision recruiters from your HRIS using the snippets
           below.
-        </P>
+        </p>
         <CodeBlock
           tabs={[
             {
@@ -146,9 +146,9 @@ insert smsObject;`,
             },
           ]}
         />
-        <P className="text-xs text-ink-soft">
+        <p className="text-xs text-ink-soft">
           Reference: <a className="text-teal underline" target="_blank" rel="noreferrer" href="https://www.sms-magic.co/docs/developers/knowledge-base-category/sms-magic-for-developers/">SMS-Magic Developer Knowledge Base</a>.
-        </P>
+        </p>
       </PersonaOnly>
 
       <Callout variant="warn" title="One number, one recruiter">

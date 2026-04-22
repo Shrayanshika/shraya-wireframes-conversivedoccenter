@@ -59,7 +59,7 @@ function ConverseDesk() {
           Open <strong>Converse App → Conversations → Converse Desk Layouts</strong>{" "}
           and create a layout that defines which Global and Conversation filters
           your recruiters see in the inbox.
-        </P>
+        </p>
 
         <Steps>
           <Step title="Click Create New Layout">
@@ -113,7 +113,7 @@ function ConverseDesk() {
           Outgoing replies are inserted into <code>smagicinteract__smsMagic__c</code>
           with <code>Direction__c = 'OUT'</code>. Inbound messages arrive on the
           incoming webhook and create a thread record automatically.
-        </P>
+        </p>
         <CodeBlock
           tabs={[
             {
@@ -144,9 +144,9 @@ insert reply;`,
             },
           ]}
         />
-        <P className="text-xs text-ink-soft">
+        <p className="text-xs text-ink-soft">
           Reference: <a className="text-teal underline" target="_blank" rel="noreferrer" href="https://www.sms-magic.co/docs/developers/knowledge-base-category/sms-magic-for-developers/">SMS-Magic Developer Knowledge Base</a>.
-        </P>
+        </p>
       </PersonaOnly>
 
       <Callout variant="info" title="Up next — Auto-Reminders">
