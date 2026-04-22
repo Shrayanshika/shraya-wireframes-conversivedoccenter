@@ -17,6 +17,11 @@ export function SOPDiagram({
   caption?: string;
   nodes: SOPNode[];
 }) {
+  // Alternate sides: 0 = left, 1 = right
+  const sideOf = (i: number) => (i % 2 === 0 ? "left" : "right");
+  // Highlight the middle node by default
+  const highlightIndex = Math.floor((nodes.length - 1) / 2);
+
   return (
     <figure className="my-7">
       <div className="mb-3 flex items-center gap-2">
@@ -31,103 +36,83 @@ export function SOPDiagram({
         )}
       </div>
 
-      <div className="relative overflow-hidden rounded-2xl border border-navy/30 bg-[oklch(0.18_0.05_260)] p-6 shadow-[0_20px_60px_-30px_oklch(0.22_0.06_260/0.6)]">
-        {/* grid */}
+      <div className="relative overflow-hidden rounded-2xl border border-navy/15 bg-gradient-to-br from-[oklch(0.98_0.01_240)] to-[oklch(0.95_0.03_220)] p-6 md:p-10 shadow-[0_20px_60px_-30px_oklch(0.45_0.15_240/0.35)]">
+        {/* subtle dot pattern */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-[0.18]"
+          className="pointer-events-none absolute inset-0 opacity-40"
           style={{
             backgroundImage:
-              "linear-gradient(to right, oklch(0.72 0.13 195 / 0.5) 1px, transparent 1px), linear-gradient(to bottom, oklch(0.72 0.13 195 / 0.5) 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
+              "radial-gradient(oklch(0.55 0.15 240 / 0.15) 1px, transparent 1px)",
+            backgroundSize: "20px 20px",
           }}
         />
-        {/* glow blobs */}
-        <div aria-hidden className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-teal/30 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute -left-10 bottom-0 h-32 w-32 rounded-full bg-teal-bright/20 blur-3xl" />
 
-        <div className="relative flex flex-col items-stretch gap-3 md:flex-row md:items-stretch md:gap-0">
+        <ol className="relative flex flex-col gap-0">
           {nodes.map((n, i) => {
-            const isMid = i === Math.floor((nodes.length - 1) / 2);
-            const highlight = n.tone === "primary" || isMid;
+            const side = sideOf(i);
+            const isHighlight = n.tone === "primary" || i === highlightIndex;
+            const next = nodes[i + 1];
+            const nextSide = next ? sideOf(i + 1) : null;
+
             return (
-              <div
-                key={i}
-                className="relative flex flex-1 items-center md:flex-col md:justify-center"
-              >
-                {/* connector line (md+) */}
-                {i < nodes.length - 1 && (
-                  <div
-                    aria-hidden
-                    className="absolute hidden md:block"
-                    style={{
-                      top: "50%",
-                      right: "-8px",
-                      width: "16px",
-                      height: "2px",
-                      background:
-                        "linear-gradient(90deg, oklch(0.72 0.13 195 / 0.9), oklch(0.72 0.13 195 / 0.3))",
-                    }}
-                  />
-                )}
+              <li key={i} className="relative">
                 <div
-                  className={`relative w-full rounded-xl border px-4 py-5 text-center transition ${
-                    highlight
-                      ? "border-teal-bright/40 bg-gradient-to-br from-teal-bright to-teal text-navy-deep shadow-[0_10px_40px_-10px_oklch(0.72_0.13_195/0.6)] node-pulse"
-                      : "border-white/10 bg-white/[0.04] text-white/85 backdrop-blur-sm"
+                  className={`flex w-full ${
+                    side === "left" ? "justify-start" : "justify-end"
                   }`}
-                  style={{ animationDelay: `${i * 220}ms` }}
                 >
                   <div
-                    className={`mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${
-                      highlight ? "text-navy-deep/70" : "text-white/45"
+                    className={`relative w-[78%] sm:w-[62%] md:w-[54%] rounded-full border px-6 py-4 transition-all ${
+                      isHighlight
+                        ? "border-transparent bg-gradient-to-r from-[oklch(0.45_0.18_255)] to-[oklch(0.55_0.16_240)] text-white shadow-[0_14px_40px_-12px_oklch(0.45_0.18_255/0.55)] node-pulse"
+                        : "border-navy/15 bg-white text-foreground shadow-[0_8px_24px_-12px_oklch(0.45_0.15_240/0.25)]"
                     }`}
+                    style={{ animationDelay: `${i * 200}ms` }}
                   >
-                    Node {i + 1}
-                  </div>
-                  <div
-                    className={`font-display text-base font-semibold leading-tight ${
-                      highlight ? "text-navy-deep" : "text-white"
-                    }`}
-                  >
-                    {n.label}
-                  </div>
-                  {n.sub && (
                     <div
-                      className={`mt-1 font-mono text-[10px] ${
-                        highlight ? "text-navy-deep/70" : "text-white/55"
+                      className={`text-[10px] font-semibold uppercase tracking-[0.2em] ${
+                        isHighlight ? "text-white/70" : "text-teal"
                       }`}
                     >
-                      {n.sub}
+                      Step {i + 1}
                     </div>
-                  )}
-                  {highlight && (
-                    <span
-                      aria-hidden
-                      className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-white/80 ping-dot"
-                    />
-                  )}
+                    <div
+                      className={`font-display text-[15px] md:text-base font-semibold leading-tight ${
+                        isHighlight ? "text-white" : "text-foreground"
+                      }`}
+                    >
+                      {n.label}
+                    </div>
+                    {n.sub && (
+                      <div
+                        className={`mt-0.5 font-mono text-[10px] ${
+                          isHighlight ? "text-white/75" : "text-ink-soft"
+                        }`}
+                      >
+                        {n.sub}
+                      </div>
+                    )}
+                    {isHighlight && (
+                      <span
+                        aria-hidden
+                        className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-teal-bright ping-dot"
+                      />
+                    )}
+                  </div>
                 </div>
 
-                {/* mobile arrow */}
-                {i < nodes.length - 1 && (
-                  <div
-                    aria-hidden
-                    className="absolute -bottom-2 left-1/2 hidden h-3 w-px -translate-x-1/2 bg-teal-bright/60 md:hidden"
+                {/* Connector to next node */}
+                {next && (
+                  <Connector
+                    from={side as "left" | "right"}
+                    to={nextSide as "left" | "right"}
                   />
                 )}
-              </div>
+              </li>
             );
           })}
-        </div>
-
-        <div className="relative mt-5 flex items-center justify-center gap-2">
-          <span className="h-px w-8 bg-teal-bright/50" />
-          <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-teal-bright/80">
-            Live data flow simulation
-          </span>
-          <span className="h-px w-8 bg-teal-bright/50" />
-        </div>
+        </ol>
       </div>
 
       {caption && (
@@ -137,15 +122,70 @@ export function SOPDiagram({
       <style>{`
         @keyframes nodePulse {
           0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-3px) scale(1.015); }
+          50% { transform: translateY(-2px) scale(1.01); }
         }
         @keyframes pingDot {
           0%, 100% { opacity: 0.5; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.3); }
+          50% { opacity: 1; transform: scale(1.4); }
+        }
+        @keyframes dashFlow {
+          to { stroke-dashoffset: -16; }
         }
         .node-pulse { animation: nodePulse 3s ease-in-out infinite; }
         .ping-dot { animation: pingDot 1.6s ease-in-out infinite; }
+        .flow-line { animation: dashFlow 1.8s linear infinite; }
       `}</style>
     </figure>
+  );
+}
+
+function Connector({
+  from,
+  to,
+}: {
+  from: "left" | "right";
+  to: "left" | "right";
+}) {
+  // SVG path connecting bottom of current node to top of next node, with a zigzag.
+  // Coordinate system: 0..100 horizontal.
+  const startX = from === "left" ? 30 : 70;
+  const endX = to === "left" ? 30 : 70;
+
+  const path =
+    from === to
+      ? `M ${startX} 0 L ${endX} 56`
+      : `M ${startX} 0 L ${startX} 22 Q ${startX} 28 ${
+          startX + (endX > startX ? 6 : -6)
+        } 28 L ${endX - (endX > startX ? 6 : -6)} 28 Q ${endX} 28 ${endX} 34 L ${endX} 56`;
+
+  return (
+    <div className="relative h-14 w-full" aria-hidden>
+      <svg
+        viewBox="0 0 100 56"
+        preserveAspectRatio="none"
+        className="absolute inset-0 h-full w-full"
+      >
+        <path
+          d={path}
+          fill="none"
+          stroke="oklch(0.55 0.18 250)"
+          strokeWidth="0.6"
+          strokeLinecap="round"
+        />
+        <path
+          d={path}
+          fill="none"
+          stroke="oklch(0.72 0.13 195)"
+          strokeWidth="0.6"
+          strokeLinecap="round"
+          strokeDasharray="2 2"
+          className="flow-line"
+          opacity="0.85"
+        />
+        {/* joint circles */}
+        <circle cx={startX} cy={2} r={1.4} fill="white" stroke="oklch(0.55 0.18 250)" strokeWidth="0.5" />
+        <circle cx={endX} cy={54} r={1.4} fill="white" stroke="oklch(0.55 0.18 250)" strokeWidth="0.5" />
+      </svg>
+    </div>
   );
 }
