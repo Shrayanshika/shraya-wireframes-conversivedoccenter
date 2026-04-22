@@ -1,130 +1,283 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Code2, Settings2, BookOpen, Shield, MessageSquare, Users, Send, CalendarClock, Repeat } from "lucide-react";
-import { usePersona } from "@/lib/persona";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
+import { Sparkles, Send, ArrowRight, Bot, User, Code2, Settings2, Loader2 } from "lucide-react";
+import { usePersona, type Persona } from "@/lib/persona";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Conversive Docs — Wavelength Recruitment" },
-      { name: "description", content: "Conversive documentation for Salesforce-native messaging. Static prototype showcasing the Wavelength locum recruitment workflow on Fern." },
-      { property: "og:title", content: "Conversive Documentation Center" },
-      { property: "og:description", content: "A Fern-powered docs prototype for the Conversive Wavelength recruitment use case." },
+      { title: "Conversive Copilot — Find your guide" },
+      { name: "description", content: "Tell the Conversive Copilot your industry, role and CRM. Get a purpose-built documentation path tailored to your build." },
+      { property: "og:title", content: "Conversive Docs · Copilot Home" },
+      { property: "og:description", content: "Conversational discovery for the Conversive documentation center, powered by Fern." },
     ],
   }),
-  component: Landing,
+  component: CopilotHome,
 });
 
-const STEPS = [
-  { to: "/workflow/sender-ids", icon: Users, step: "Step 1", title: "Sender IDs", desc: "Map 42 long-codes to recruiter Users in Salesforce." },
-  { to: "/workflow/consent", icon: Shield, step: "Step 2", title: "Capture Consent", desc: "Sync opt-in / opt-out into Communication Subscription Consents." },
-  { to: "/workflow/bulk-sms", icon: Send, step: "Step 3", title: "Segment & Bulk SMS", desc: "Filter by Specialty, dispatch the locum alert in seconds." },
-  { to: "/workflow/converse-desk", icon: MessageSquare, step: "Step 4", title: "Converse Desk", desc: "1:1 replies with AI suggestions in the recruiter inbox." },
-  { to: "/workflow/reminders", icon: CalendarClock, step: "Step 5", title: "Interview Reminders", desc: "2-day & 2-hour automated nudges. (Preview)" },
-  { to: "/workflow/recurring", icon: Repeat, step: "Step 6", title: "Recurring Timesheets", desc: "Friday RRULE alerts to active locums. (Preview)" },
-];
+type Step = "industry" | "role" | "crm" | "loading" | "done";
 
-const REFERENCE = [
-  { to: "/api", icon: Code2, title: "API Reference", desc: "POST /v1/messages, GET /v1/consent-status." },
-  { to: "/salesforce", icon: Settings2, title: "Salesforce Integration", desc: "Package install, permission sets, object model." },
-  { to: "/compliance", icon: Shield, title: "Compliance", desc: "Multichannel consent, audit DB, STOP / START keywords." },
-  { to: "/messaging-library", icon: BookOpen, title: "Messaging Library", desc: "Reusable templates for the recruitment flow." },
+const INDUSTRIES = ["Recruitment", "Retail", "Healthcare", "Finance", "Education"];
+const ROLES: { label: string; value: Persona; hint: string }[] = [
+  { label: "Admin", value: "admin", hint: "Salesforce setup, no code" },
+  { label: "Developer", value: "dev", hint: "Apex, REST, webhooks" },
 ];
+const CRMS = ["Salesforce", "Zoho"];
 
-function Landing() {
-  const { persona, setPersona } = usePersona();
+function CopilotHome() {
+  const navigate = useNavigate();
+  const { setPersona } = usePersona();
+  const [step, setStep] = useState<Step>("industry");
+  const [industry, setIndustry] = useState<string | null>(null);
+  const [role, setRole] = useState<Persona | null>(null);
+  const [crm, setCrm] = useState<string | null>(null);
+  const [progress, setProgress] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [step, industry, role, crm]);
+
+  // Loading bar -> redirect
+  useEffect(() => {
+    if (step !== "loading") return;
+    const id = setInterval(() => {
+      setProgress((p) => {
+        const next = p + 8 + Math.random() * 10;
+        if (next >= 100) {
+          clearInterval(id);
+          setStep("done");
+          return 100;
+        }
+        return next;
+      });
+    }, 180);
+    return () => clearInterval(id);
+  }, [step]);
+
+  useEffect(() => {
+    if (step !== "done" || !role) return;
+    setPersona(role);
+    const t = setTimeout(() => {
+      navigate({ to: "/workflow/sender-ids" });
+    }, 900);
+    return () => clearTimeout(t);
+  }, [step, role, setPersona, navigate]);
+
+  const pickIndustry = (v: string) => {
+    setIndustry(v);
+    setTimeout(() => setStep("role"), 250);
+  };
+  const pickRole = (v: Persona) => {
+    setRole(v);
+    setPersona(v);
+    setTimeout(() => setStep("crm"), 250);
+  };
+  const pickCrm = (v: string) => {
+    setCrm(v);
+    setTimeout(() => setStep("loading"), 250);
+  };
+
+  const reset = () => {
+    setIndustry(null);
+    setRole(null);
+    setCrm(null);
+    setProgress(0);
+    setStep("industry");
+  };
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-12 lg:py-20">
-      {/* Hero */}
-      <div className="rounded-3xl border border-border bg-gradient-to-br from-surface-elevated to-background p-8 lg:p-14 shadow-sm">
-        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-[0.18em] text-accent">
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />
-          Conversive · Documentation Center
-        </div>
-        <h1 className="mt-5 font-display text-4xl lg:text-5xl font-bold tracking-tight text-foreground">
-          Build the Wavelength recruitment journey on Conversive.
-        </h1>
-        <p className="mt-5 max-w-2xl text-lg leading-8 text-ink-soft">
-          A Fern-powered prototype showing how Wavelength automates locum job
-          alerts end-to-end on Salesforce — from Sender ID mapping to recurring
-          timesheet reminders. Pick a persona to tailor the content.
-        </p>
+    <div className="relative isolate min-h-[calc(100vh-3.5rem)] overflow-hidden">
+      <div className="absolute inset-0 -z-10 gradient-hero" />
+      <div className="absolute inset-0 -z-10 grid-bg opacity-40" />
 
-        <div className="mt-8 flex flex-wrap items-center gap-3">
-          <button
-            onClick={() => setPersona("admin")}
-            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition ${persona === "admin" ? "bg-accent text-accent-foreground" : "bg-surface-elevated text-foreground hover:bg-border"}`}
-          >
-            <Settings2 className="h-4 w-4" /> Admin view
-          </button>
-          <button
-            onClick={() => setPersona("dev")}
-            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition ${persona === "dev" ? "bg-accent text-accent-foreground" : "bg-surface-elevated text-foreground hover:bg-border"}`}
-          >
-            <Code2 className="h-4 w-4" /> Developer view
-          </button>
-          <Link
-            to="/workflow/sender-ids"
-            className="ml-auto inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-semibold text-background hover:opacity-90"
-          >
-            Start with Step 1 <ArrowRight className="h-4 w-4" />
-          </Link>
+      <div className="mx-auto flex max-w-3xl flex-col px-4 pt-12 pb-24 lg:pt-20">
+        {/* Header */}
+        <div className="text-center">
+          <div className="mx-auto mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-teal-bright backdrop-blur">
+            <Sparkles className="h-3 w-3" /> Conversive Copilot · Powered by Fern
+          </div>
+          <h1 className="font-display text-3xl font-bold tracking-tight text-white sm:text-5xl">
+            What are you building today?
+          </h1>
+          <p className="mt-3 text-sm text-white/70 sm:text-base">
+            Answer three quick questions and we'll load a purpose-oriented guide
+            for your stack. You can keep chatting with the Copilot anytime.
+          </p>
         </div>
 
-        <div className="mt-6 text-xs text-ink-soft font-mono">
-          Active persona: <span className="text-accent">{persona === "admin" ? "Admin · Salesforce setup" : "Developer · Apex & REST"}</span>
-        </div>
-      </div>
+        {/* Chat */}
+        <div
+          ref={scrollRef}
+          className="mt-8 flex max-h-[60vh] flex-col gap-4 overflow-y-auto rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur"
+        >
+          <Bubble who="bot">Hi 👋 I'm the Conversive Copilot. Which industry are you in?</Bubble>
 
-      {/* Workflow grid */}
-      <div className="mt-14">
-        <div className="flex items-baseline justify-between">
-          <h2 className="font-display text-2xl font-bold text-foreground">Wavelength Workflow</h2>
-          <span className="text-xs font-mono uppercase tracking-wider text-ink-soft">6 steps</span>
-        </div>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {STEPS.map((s) => (
-            <Link
-              key={s.to}
-              to={s.to}
-              className="group rounded-2xl border border-border bg-surface-elevated p-5 transition hover:border-accent hover:shadow-md"
-            >
-              <div className="flex items-center gap-3">
-                <div className="rounded-lg bg-background p-2 ring-1 ring-border">
-                  <s.icon className="h-4 w-4 text-accent" />
+          {step === "industry" && (
+            <Choices options={INDUSTRIES} onPick={pickIndustry} highlight="Recruitment" />
+          )}
+
+          {industry && (
+            <>
+              <Bubble who="user">{industry}</Bubble>
+              <Bubble who="bot">Great — and what's your role?</Bubble>
+            </>
+          )}
+
+          {step === "role" && (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {ROLES.map((r) => (
+                <button
+                  key={r.value}
+                  onClick={() => pickRole(r.value)}
+                  className="group flex items-center gap-3 rounded-xl border border-white/15 bg-white/5 p-4 text-left transition hover:border-teal-bright/60 hover:bg-white/10"
+                >
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${r.value === "admin" ? "bg-admin/20 text-admin" : "bg-dev/20 text-dev"}`}>
+                    {r.value === "admin" ? <Settings2 className="h-5 w-5" /> : <Code2 className="h-5 w-5" />}
+                  </div>
+                  <div>
+                    <div className="font-display text-sm font-semibold text-white">{r.label}</div>
+                    <div className="text-xs text-white/60">{r.hint}</div>
+                  </div>
+                  <ArrowRight className="ml-auto h-4 w-4 text-white/40 transition group-hover:translate-x-1 group-hover:text-teal-bright" />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {role && (
+            <>
+              <Bubble who="user">{role === "admin" ? "Admin" : "Developer"}</Bubble>
+              <Bubble who="bot">Got it. Which CRM / platform are you on?</Bubble>
+            </>
+          )}
+
+          {step === "crm" && (
+            <Choices options={CRMS} onPick={pickCrm} highlight="Salesforce" disabled={["Zoho"]} />
+          )}
+
+          {crm && (
+            <>
+              <Bubble who="user">{crm}</Bubble>
+            </>
+          )}
+
+          {(step === "loading" || step === "done") && (
+            <Bubble who="bot">
+              <div className="space-y-2">
+                <div>
+                  Here is your purpose-oriented guide loading
+                  <span className="inline-flex w-6 overflow-hidden align-bottom"><span className="dot-loop">…</span></span>
+                  <br />
+                  <span className="text-white/60">You can ask Copilot if you need more.</span>
                 </div>
-                <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-ink-soft">{s.step}</span>
+                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                  <div
+                    className="h-full bg-gradient-to-r from-teal to-teal-bright transition-all"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <div className="flex flex-wrap gap-1.5 pt-1 text-[11px]">
+                  {[
+                    `Industry · ${industry}`,
+                    `Persona · ${role === "admin" ? "Admin" : "Developer"}`,
+                    `CRM · ${crm}`,
+                    "Use Case · Wavelength",
+                  ].map((t) => (
+                    <span key={t} className="rounded-full border border-teal-bright/30 bg-teal-bright/10 px-2 py-0.5 text-teal-bright">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+                {step === "done" && (
+                  <div className="mt-2 inline-flex items-center gap-1 text-xs text-teal-bright">
+                    <Loader2 className="h-3 w-3 animate-spin" /> Routing to {role === "admin" ? "Admin" : "Developer"} sidebar…
+                  </div>
+                )}
               </div>
-              <div className="mt-4 font-display text-lg font-semibold text-foreground group-hover:text-accent">
-                {s.title}
-              </div>
-              <p className="mt-1.5 text-sm leading-6 text-ink-soft">{s.desc}</p>
-            </Link>
-          ))}
+            </Bubble>
+          )}
+        </div>
+
+        {/* Composer */}
+        <div className="mt-4 flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] p-2 backdrop-blur">
+          <input
+            disabled
+            placeholder={step === "industry" ? "Pick an industry above…" : step === "role" ? "Pick a role above…" : step === "crm" ? "Pick your CRM above…" : "Loading your guide…"}
+            className="flex-1 bg-transparent px-3 py-2 text-sm text-white outline-none placeholder:text-white/40"
+          />
+          <button
+            onClick={reset}
+            className="rounded-lg border border-white/15 px-3 py-2 text-xs font-medium text-white/70 hover:bg-white/10"
+          >
+            Restart
+          </button>
+          <button
+            disabled
+            className="inline-flex items-center gap-1 rounded-lg bg-teal-bright/80 px-3 py-2 text-xs font-semibold text-navy-deep opacity-60"
+          >
+            <Send className="h-3.5 w-3.5" /> Ask
+          </button>
         </div>
       </div>
 
-      {/* Reference */}
-      <div className="mt-14">
-        <h2 className="font-display text-2xl font-bold text-foreground">Reference</h2>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          {REFERENCE.map((r) => (
-            <Link
-              key={r.to}
-              to={r.to}
-              className="group flex items-start gap-4 rounded-2xl border border-border bg-surface-elevated p-5 transition hover:border-accent"
-            >
-              <div className="rounded-lg bg-background p-2.5 ring-1 ring-border">
-                <r.icon className="h-5 w-5 text-accent" />
-              </div>
-              <div>
-                <div className="font-display text-base font-semibold text-foreground group-hover:text-accent">{r.title}</div>
-                <p className="mt-1 text-sm leading-6 text-ink-soft">{r.desc}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
+      <style>{`
+        @keyframes dotLoop { 0%{content:'.'} 33%{content:'..'} 66%{content:'...'} }
+        .dot-loop::after { content: '…'; animation: dotLoop 1.2s steps(3,end) infinite; }
+      `}</style>
+    </div>
+  );
+}
+
+function Bubble({ who, children }: { who: "bot" | "user"; children: React.ReactNode }) {
+  const isBot = who === "bot";
+  return (
+    <div className={`flex items-start gap-3 ${isBot ? "" : "flex-row-reverse"}`}>
+      <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${isBot ? "bg-teal-bright text-navy-deep" : "bg-white/10 text-white"}`}>
+        {isBot ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
       </div>
+      <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${isBot ? "rounded-tl-sm bg-white/10 text-white" : "rounded-tr-sm bg-teal-bright text-navy-deep font-medium"}`}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function Choices({
+  options,
+  onPick,
+  highlight,
+  disabled = [],
+}: {
+  options: string[];
+  onPick: (v: string) => void;
+  highlight?: string;
+  disabled?: string[];
+}) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {options.map((o) => {
+        const isHi = o === highlight;
+        const isDis = disabled.includes(o);
+        return (
+          <button
+            key={o}
+            disabled={isDis}
+            onClick={() => onPick(o)}
+            className={`group rounded-full border px-3.5 py-1.5 text-sm font-medium transition ${
+              isDis
+                ? "cursor-not-allowed border-white/10 bg-white/5 text-white/30"
+                : isHi
+                  ? "border-teal-bright/60 bg-teal-bright/15 text-teal-bright hover:bg-teal-bright/25"
+                  : "border-white/15 bg-white/5 text-white/80 hover:border-teal-bright/40 hover:bg-white/10"
+            }`}
+          >
+            {o}
+            {isHi && <span className="ml-1.5 text-[10px] uppercase tracking-wider opacity-70">recommended</span>}
+            {isDis && <span className="ml-1.5 text-[10px] uppercase tracking-wider">soon</span>}
+          </button>
+        );
+      })}
     </div>
   );
 }
