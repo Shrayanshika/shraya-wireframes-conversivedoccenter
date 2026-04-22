@@ -95,7 +95,7 @@ function CopilotHome() {
         {/* Header */}
         <div className="text-center">
           <div className="mx-auto mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-teal-bright backdrop-blur">
-            <Sparkles className="h-3 w-3" /> Conversive Copilot · Powered by Fern
+            <Sparkles className="h-3 w-3" /> Conversive Copilot
           </div>
           <h1 className="font-display text-3xl font-bold tracking-tight text-white sm:text-5xl">
             What are you building today?
