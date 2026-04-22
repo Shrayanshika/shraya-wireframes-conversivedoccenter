@@ -9,38 +9,200 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SalesforceRouteImport } from './routes/salesforce'
+import { Route as MessagingLibraryRouteImport } from './routes/messaging-library'
+import { Route as ComplianceRouteImport } from './routes/compliance'
+import { Route as ApiRouteImport } from './routes/api'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WorkflowSenderIdsRouteImport } from './routes/workflow.sender-ids'
+import { Route as WorkflowRemindersRouteImport } from './routes/workflow.reminders'
+import { Route as WorkflowRecurringRouteImport } from './routes/workflow.recurring'
+import { Route as WorkflowConverseDeskRouteImport } from './routes/workflow.converse-desk'
+import { Route as WorkflowConsentRouteImport } from './routes/workflow.consent'
+import { Route as WorkflowBulkSmsRouteImport } from './routes/workflow.bulk-sms'
 
+const SalesforceRoute = SalesforceRouteImport.update({
+  id: '/salesforce',
+  path: '/salesforce',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MessagingLibraryRoute = MessagingLibraryRouteImport.update({
+  id: '/messaging-library',
+  path: '/messaging-library',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComplianceRoute = ComplianceRouteImport.update({
+  id: '/compliance',
+  path: '/compliance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiRoute = ApiRouteImport.update({
+  id: '/api',
+  path: '/api',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkflowSenderIdsRoute = WorkflowSenderIdsRouteImport.update({
+  id: '/workflow/sender-ids',
+  path: '/workflow/sender-ids',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkflowRemindersRoute = WorkflowRemindersRouteImport.update({
+  id: '/workflow/reminders',
+  path: '/workflow/reminders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkflowRecurringRoute = WorkflowRecurringRouteImport.update({
+  id: '/workflow/recurring',
+  path: '/workflow/recurring',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkflowConverseDeskRoute = WorkflowConverseDeskRouteImport.update({
+  id: '/workflow/converse-desk',
+  path: '/workflow/converse-desk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkflowConsentRoute = WorkflowConsentRouteImport.update({
+  id: '/workflow/consent',
+  path: '/workflow/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkflowBulkSmsRoute = WorkflowBulkSmsRouteImport.update({
+  id: '/workflow/bulk-sms',
+  path: '/workflow/bulk-sms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api': typeof ApiRoute
+  '/compliance': typeof ComplianceRoute
+  '/messaging-library': typeof MessagingLibraryRoute
+  '/salesforce': typeof SalesforceRoute
+  '/workflow/bulk-sms': typeof WorkflowBulkSmsRoute
+  '/workflow/consent': typeof WorkflowConsentRoute
+  '/workflow/converse-desk': typeof WorkflowConverseDeskRoute
+  '/workflow/recurring': typeof WorkflowRecurringRoute
+  '/workflow/reminders': typeof WorkflowRemindersRoute
+  '/workflow/sender-ids': typeof WorkflowSenderIdsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api': typeof ApiRoute
+  '/compliance': typeof ComplianceRoute
+  '/messaging-library': typeof MessagingLibraryRoute
+  '/salesforce': typeof SalesforceRoute
+  '/workflow/bulk-sms': typeof WorkflowBulkSmsRoute
+  '/workflow/consent': typeof WorkflowConsentRoute
+  '/workflow/converse-desk': typeof WorkflowConverseDeskRoute
+  '/workflow/recurring': typeof WorkflowRecurringRoute
+  '/workflow/reminders': typeof WorkflowRemindersRoute
+  '/workflow/sender-ids': typeof WorkflowSenderIdsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api': typeof ApiRoute
+  '/compliance': typeof ComplianceRoute
+  '/messaging-library': typeof MessagingLibraryRoute
+  '/salesforce': typeof SalesforceRoute
+  '/workflow/bulk-sms': typeof WorkflowBulkSmsRoute
+  '/workflow/consent': typeof WorkflowConsentRoute
+  '/workflow/converse-desk': typeof WorkflowConverseDeskRoute
+  '/workflow/recurring': typeof WorkflowRecurringRoute
+  '/workflow/reminders': typeof WorkflowRemindersRoute
+  '/workflow/sender-ids': typeof WorkflowSenderIdsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/api'
+    | '/compliance'
+    | '/messaging-library'
+    | '/salesforce'
+    | '/workflow/bulk-sms'
+    | '/workflow/consent'
+    | '/workflow/converse-desk'
+    | '/workflow/recurring'
+    | '/workflow/reminders'
+    | '/workflow/sender-ids'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/api'
+    | '/compliance'
+    | '/messaging-library'
+    | '/salesforce'
+    | '/workflow/bulk-sms'
+    | '/workflow/consent'
+    | '/workflow/converse-desk'
+    | '/workflow/recurring'
+    | '/workflow/reminders'
+    | '/workflow/sender-ids'
+  id:
+    | '__root__'
+    | '/'
+    | '/api'
+    | '/compliance'
+    | '/messaging-library'
+    | '/salesforce'
+    | '/workflow/bulk-sms'
+    | '/workflow/consent'
+    | '/workflow/converse-desk'
+    | '/workflow/recurring'
+    | '/workflow/reminders'
+    | '/workflow/sender-ids'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiRoute: typeof ApiRoute
+  ComplianceRoute: typeof ComplianceRoute
+  MessagingLibraryRoute: typeof MessagingLibraryRoute
+  SalesforceRoute: typeof SalesforceRoute
+  WorkflowBulkSmsRoute: typeof WorkflowBulkSmsRoute
+  WorkflowConsentRoute: typeof WorkflowConsentRoute
+  WorkflowConverseDeskRoute: typeof WorkflowConverseDeskRoute
+  WorkflowRecurringRoute: typeof WorkflowRecurringRoute
+  WorkflowRemindersRoute: typeof WorkflowRemindersRoute
+  WorkflowSenderIdsRoute: typeof WorkflowSenderIdsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/salesforce': {
+      id: '/salesforce'
+      path: '/salesforce'
+      fullPath: '/salesforce'
+      preLoaderRoute: typeof SalesforceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/messaging-library': {
+      id: '/messaging-library'
+      path: '/messaging-library'
+      fullPath: '/messaging-library'
+      preLoaderRoute: typeof MessagingLibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compliance': {
+      id: '/compliance'
+      path: '/compliance'
+      fullPath: '/compliance'
+      preLoaderRoute: typeof ComplianceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api': {
+      id: '/api'
+      path: '/api'
+      fullPath: '/api'
+      preLoaderRoute: typeof ApiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +210,63 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/workflow/sender-ids': {
+      id: '/workflow/sender-ids'
+      path: '/workflow/sender-ids'
+      fullPath: '/workflow/sender-ids'
+      preLoaderRoute: typeof WorkflowSenderIdsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/workflow/reminders': {
+      id: '/workflow/reminders'
+      path: '/workflow/reminders'
+      fullPath: '/workflow/reminders'
+      preLoaderRoute: typeof WorkflowRemindersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/workflow/recurring': {
+      id: '/workflow/recurring'
+      path: '/workflow/recurring'
+      fullPath: '/workflow/recurring'
+      preLoaderRoute: typeof WorkflowRecurringRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/workflow/converse-desk': {
+      id: '/workflow/converse-desk'
+      path: '/workflow/converse-desk'
+      fullPath: '/workflow/converse-desk'
+      preLoaderRoute: typeof WorkflowConverseDeskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/workflow/consent': {
+      id: '/workflow/consent'
+      path: '/workflow/consent'
+      fullPath: '/workflow/consent'
+      preLoaderRoute: typeof WorkflowConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/workflow/bulk-sms': {
+      id: '/workflow/bulk-sms'
+      path: '/workflow/bulk-sms'
+      fullPath: '/workflow/bulk-sms'
+      preLoaderRoute: typeof WorkflowBulkSmsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiRoute: ApiRoute,
+  ComplianceRoute: ComplianceRoute,
+  MessagingLibraryRoute: MessagingLibraryRoute,
+  SalesforceRoute: SalesforceRoute,
+  WorkflowBulkSmsRoute: WorkflowBulkSmsRoute,
+  WorkflowConsentRoute: WorkflowConsentRoute,
+  WorkflowConverseDeskRoute: WorkflowConverseDeskRoute,
+  WorkflowRecurringRoute: WorkflowRecurringRoute,
+  WorkflowRemindersRoute: WorkflowRemindersRoute,
+  WorkflowSenderIdsRoute: WorkflowSenderIdsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
