@@ -9,23 +9,25 @@ export function CopilotButton({
   hint?: string;
 }) {
   return (
-    <div className="my-8 flex flex-col items-start gap-3 rounded-2xl border border-teal/20 bg-gradient-to-br from-teal-soft to-card p-5 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-navy-deep text-teal-bright">
-          <Sparkles className="h-5 w-5" />
+    <div className="my-10 flex flex-col items-start gap-4 overflow-hidden rounded-xl border border-border bg-card p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-start gap-3.5">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-navy-deep text-teal-bright">
+          <Sparkles className="h-[18px] w-[18px]" />
         </div>
         <div>
-          <div className="font-display text-sm font-semibold text-navy-deep">
-            Still stuck?
+          <div className="font-display text-[14px] font-semibold text-foreground">
+            Still have questions?
           </div>
-          <div className="text-xs text-ink-soft">{hint}</div>
+          <div className="mt-0.5 text-[13px] leading-5 text-ink-soft">
+            {hint}
+          </div>
         </div>
       </div>
       <Link
         to="/"
-        className="inline-flex items-center gap-2 rounded-lg bg-navy-deep px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-navy"
+        className="inline-flex shrink-0 items-center gap-2 rounded-md bg-foreground px-3.5 py-2 text-[13px] font-semibold text-background shadow-sm transition hover:opacity-90"
       >
-        {label} <ArrowRight className="h-4 w-4" />
+        {label} <ArrowRight className="h-3.5 w-3.5" />
       </Link>
     </div>
   );
