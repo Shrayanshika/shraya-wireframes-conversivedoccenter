@@ -1,5 +1,11 @@
 {
   "name": "Conversive Docs",
+  "favicon": "/favicon.ico",
+  "colors": {
+    "primary": "#6366F1",
+    "light": "#EEF2FF",
+    "dark": "#4338CA"
+  },
   "navigation": [
     {
       "group": "Reference",
