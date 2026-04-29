@@ -1,0 +1,11 @@
+{
+  "name": "Conversive Docs",
+  "navigation": [
+    {
+      "group": "Reference",
+      "pages": [
+        "reference/permission-sets"
+      ]
+    }
+  ]
+}
